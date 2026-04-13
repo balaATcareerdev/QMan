@@ -1,0 +1,120 @@
+import { LoaderCircle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+const CreateServiceModal = ({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) => {
+  const [formData, setFormData] = useState({
+    serviceName: "",
+    serviceDescription: "",
+    serviceDate: "",
+  });
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const submitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearSubmitTimer = (): void => {
+    if (submitTimerRef.current) {
+      clearTimeout(submitTimerRef.current);
+      submitTimerRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      clearSubmitTimer();
+    };
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const createService = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Simulate API call
+    clearSubmitTimer();
+    setIsLoading(true);
+
+    submitTimerRef.current = setTimeout(() => {
+      setIsLoading(false);
+      onClose();
+    }, 2000);
+  };
+
+  const handleClose = () => {
+    clearSubmitTimer();
+    setIsLoading(false);
+    onClose();
+  };
+
+  if (!open) return null;
+  return (
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+      onClick={handleClose}
+    >
+      <div className="relative" onClick={(e) => e.stopPropagation()}>
+        {/* Close */}
+        <button
+          onClick={handleClose}
+          className="absolute -top-3 -right-3 bg-white rounded-full px-2 shadow text-black"
+        >
+          ✕
+        </button>
+
+        <form
+          onSubmit={createService}
+          className="bg-linear-to-b from-[#000000] to-[#140B1B] text-gray-500 max-w-96 mx-4 md:p-6 p-4 text-sm rounded-lg shadow-lg"
+        >
+          <h2 className="text-2xl font-semibold mb-6 text-center text-white">
+            Create Service
+          </h2>
+
+          <input
+            className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white"
+            placeholder="Service Name"
+            name="serviceName"
+            value={formData.serviceName}
+            onChange={handleChange}
+          />
+
+          <input
+            className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white"
+            placeholder="Description"
+            name="serviceDescription"
+            value={formData.serviceDescription}
+            onChange={handleChange}
+          />
+
+          <input
+            className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white scheme-dark"
+            placeholder="Date"
+            type="date"
+            name="serviceDate"
+            value={formData.serviceDate}
+            onChange={handleChange}
+          />
+
+          <button
+            className="w-full my-3 bg-[#9711FB] hover:bg-[#9711FB]/80 transition py-2.5 rounded text-white flex justify-center items-center gap-1"
+            disabled={isLoading}
+          >
+            Create
+            {isLoading && <LoaderCircle size={20} className="animate-spin" />}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default CreateServiceModal;
