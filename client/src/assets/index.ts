@@ -1,7 +1,9 @@
-export const services = [
+export const servicesData = [
   {
     id: "srv_001",
     name: "Library",
+    description:
+      "Quiet study and reading support for visitors who need focused access time.",
     date: "2026-04-11",
     status: "active",
     createdAt: "2026-04-01T10:30:00Z",
@@ -9,6 +11,8 @@ export const services = [
   {
     id: "srv_002",
     name: "Lunch",
+    description:
+      "Fast-moving midday queue for meal pickup and short break scheduling.",
     date: "2026-04-11",
     status: "active",
     createdAt: "2026-04-02T09:15:00Z",
@@ -16,6 +20,8 @@ export const services = [
   {
     id: "srv_003",
     name: "Meeting Room",
+    description:
+      "Reserved room access for team discussions, planning, and small presentations.",
     date: "2026-04-12",
     status: "upcoming",
     createdAt: "2026-04-03T14:20:00Z",
@@ -23,6 +29,8 @@ export const services = [
   {
     id: "srv_004",
     name: "Salon",
+    description:
+      "Personal care service queue for grooming appointments and beauty treatments.",
     date: "2026-04-11",
     status: "paused",
     createdAt: "2026-04-01T16:45:00Z",
@@ -30,6 +38,8 @@ export const services = [
   {
     id: "srv_005",
     name: "Doctor Appointment",
+    description:
+      "Healthcare visit coordination for routine checkups and patient consultations.",
     date: "2026-04-13",
     status: "upcoming",
     createdAt: "2026-04-04T11:10:00Z",
@@ -37,6 +47,8 @@ export const services = [
   {
     id: "srv_006",
     name: "Bank Token",
+    description:
+      "Financial service line for account help, transactions, and quick branch support.",
     date: "2026-04-11",
     status: "active",
     createdAt: "2026-04-02T13:00:00Z",
@@ -44,6 +56,8 @@ export const services = [
   {
     id: "srv_007",
     name: "Gym Session",
+    description:
+      "Workout slot management for fitness training and equipment access windows.",
     date: "2026-04-14",
     status: "upcoming",
     createdAt: "2026-04-05T08:40:00Z",
@@ -51,6 +65,8 @@ export const services = [
   {
     id: "srv_008",
     name: "Car Service",
+    description:
+      "Vehicle maintenance queue for inspection, repairs, and routine service work.",
     date: "2026-04-10",
     status: "completed",
     createdAt: "2026-03-30T12:25:00Z",
@@ -58,6 +74,8 @@ export const services = [
   {
     id: "srv_009",
     name: "Passport Office",
+    description:
+      "Document processing support for passport applications, renewals, and verification.",
     date: "2026-04-15",
     status: "upcoming",
     createdAt: "2026-04-06T17:50:00Z",
@@ -65,13 +83,15 @@ export const services = [
   {
     id: "srv_010",
     name: "College Registration",
+    description:
+      "Enrollment assistance for admissions, records, and student onboarding steps.",
     date: "2026-04-09",
     status: "completed",
     createdAt: "2026-03-28T10:05:00Z",
   },
 ];
 
-export const slots = [
+export const slotsData = [
   {
     id: "slot_001",
     serviceId: "srv_001",
