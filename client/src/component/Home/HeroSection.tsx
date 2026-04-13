@@ -65,7 +65,6 @@ const HeroSection = ({
 
       <CreateServiceModal
         open={openCreate}
-        isOpen={setOpenCreate}
         onClose={() => setOpenCreate(false)}
       />
     </section>

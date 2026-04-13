@@ -1,13 +1,11 @@
 import { LoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const CreateServiceModal = ({
   open,
-  isOpen,
   onClose,
 }: {
   open: boolean;
-  isOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: () => void;
 }) => {
   const [formData, setFormData] = useState({
@@ -17,6 +15,20 @@ const CreateServiceModal = ({
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const submitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearSubmitTimer = (): void => {
+    if (submitTimerRef.current) {
+      clearTimeout(submitTimerRef.current);
+      submitTimerRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      clearSubmitTimer();
+    };
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -29,26 +41,31 @@ const CreateServiceModal = ({
     e.preventDefault();
 
     // Simulate API call
+    clearSubmitTimer();
     setIsLoading(true);
 
-    const timer = setTimeout(() => {
+    submitTimerRef.current = setTimeout(() => {
       setIsLoading(false);
-      isOpen(false);
+      onClose();
     }, 2000);
+  };
 
-    return () => clearTimeout(timer);
+  const handleClose = () => {
+    clearSubmitTimer();
+    setIsLoading(false);
+    onClose();
   };
 
   if (!open) return null;
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div className="relative" onClick={(e) => e.stopPropagation()}>
         {/* Close */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute -top-3 -right-3 bg-white rounded-full px-2 shadow text-black"
         >
           ✕
@@ -87,12 +104,12 @@ const CreateServiceModal = ({
             onChange={handleChange}
           />
 
-          <button className="w-full my-3 bg-[#9711FB] hover:bg-[#9711FB]/80 transition py-2.5 rounded text-white flex justify-center items-center gap-1" disabled={isLoading}>
+          <button
+            className="w-full my-3 bg-[#9711FB] hover:bg-[#9711FB]/80 transition py-2.5 rounded text-white flex justify-center items-center gap-1"
+            disabled={isLoading}
+          >
             Create
-            {
-              isLoading && <LoaderCircle size={20} className="animate-spin" />
-            }
-            
+            {isLoading && <LoaderCircle size={20} className="animate-spin" />}
           </button>
         </form>
       </div>
