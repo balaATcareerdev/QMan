@@ -9,6 +9,8 @@ export interface ServiceType {
 
 export interface SlotType {
   id: string;
+  slotName: string;
+  isPaused: boolean;
   serviceId: string;
   startTime: string;
   endTime: string;
@@ -18,4 +20,14 @@ export interface SlotType {
   currentToken: number;
   avgTime: number;
   completedCount: number;
+}
+
+export interface TokenType {
+  id: string;
+  slotId: string;
+  slotNumber: number;
+  status: string;
+  createdAt: string;
+  startedServiceTime: string | null;
+  endServiceTime: string | null;
 }
