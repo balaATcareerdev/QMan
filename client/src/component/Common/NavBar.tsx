@@ -5,7 +5,7 @@ const NavBar = () => {
   const [name] = useState("Balaji S");
 
   return (
-    <nav className="absolute z-30 w-full flex p-2">
+    <nav className="absolute z-100 w-full flex p-2">
       <div className="w-1/3"></div>
       <div className="text-white w-1/3 text-xl flex justify-center items-center gap-6">
         <Link to="/">Home</Link>

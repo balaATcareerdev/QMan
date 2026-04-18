@@ -1,5 +1,6 @@
 import PrimaryGradHome from "@/component/Buttons/PrimaryGradHome";
 import type { ServiceType } from "@/types/types";
+import { useNavigate } from "react-router";
 
 const ServiceCard = ({
   service,
@@ -12,6 +13,8 @@ const ServiceCard = ({
     totalSlots: number;
   };
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className={`text-white w-2/3 grid grid-cols-[50%_30%_20%] border border-[#FFFFFF] px-5 py-2.5 rounded-lg bg-[#ffffff]/10 hover:border-[#FF1994] hover:bg-[#FF1994]/10 transition-all duration-300 hover:scale-105`}
@@ -38,7 +41,10 @@ const ServiceCard = ({
       </div>
 
       <div className="flex justify-center items-center text-lg">
-        <PrimaryGradHome text="Manage Service" />
+        <PrimaryGradHome
+          text="Manage Service"
+          onClick={() => navigate(`service/${service.id}`)}
+        />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import HeroSection from "@/component/Home/HeroSection";
 import ServiceCard from "@/component/Home/ServiceCard";
 import UpcomingService from "@/component/Home/UpcomingService";
 import EditServiceModal from "@/component/Modals/EditServiceModal";
+import CategoryHeader from "@/component/Title/CategoryHeader";
 import type { ServiceType, SlotType } from "@/types/types";
 import { useEffect, useMemo, useState } from "react";
 
@@ -100,7 +101,7 @@ const Home = () => {
 
       {stats.activeService.length > 0 && (
         <section className="px-20">
-          <h1 className="text-[#DEB2FF] text-4xl">Active</h1>
+          <CategoryHeader text={"Active"} />
           <hr className="mt-2 border-[#CC8CFC]" />
 
           <div className="flex flex-col justify-center items-center gap-20 pt-5">
@@ -121,13 +122,14 @@ const Home = () => {
 
       {stats.upcomingSlotsPerService.length > 0 && (
         <section className="px-20 pb-20">
-          <h1 className="text-[#DEB2FF] text-4xl">Upcoming</h1>
+          <CategoryHeader text={"Upcoming"} />
 
           <hr className="mt-2 border-[#CC8CFC]" />
 
           <div className="flex flex-col justify-center items-center gap-20 pt-5">
             {stats.upcomingService.map((ser) => (
               <UpcomingService
+                key={ser.id}
                 service={ser}
                 slotCount={
                   stats.upcomingSlotsPerService.find(

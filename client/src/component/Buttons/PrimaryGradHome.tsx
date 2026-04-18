@@ -1,4 +1,10 @@
-const PrimaryGradHome = ({ text, onClick }: { text: string, onClick: () => void }) => {
+const PrimaryGradHome = ({
+  text,
+  onClick,
+}: {
+  text: string;
+  onClick: () => void;
+}) => {
   return (
     <button
       className="px-2.5 py-1 bg-linear-to-r from-[#A07FB9] to-[#A75581] rounded-sm
