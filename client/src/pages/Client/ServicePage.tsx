@@ -23,33 +23,20 @@ const ServicePage = () => {
 
   const [tokenDetails, setTokenDetails] = useState<TokenType[]>([]);
 
-  const fetchService = async () => {
+  useEffect(() => {
     const serviceSelected = servicesData.find((s) => s.id === serviceId);
-    setTimeout(() => {
-      if (serviceSelected) {
-        setService(serviceSelected);
-      }
+    const t1 = setTimeout(() => {
+      setService(serviceSelected ?? null);
       setIsLoading(false);
     }, 2000);
-  };
-
-  const fetchSlots = async () => {
-    setTimeout(() => {
-      setSlotsDetails(slotsData);
-    }, 2000);
-  };
-
-  const fetchToken = async () => {
-    setTimeout(() => {
-      setTokenDetails(tokens);
-    }, 2000);
-  };
-
-  useEffect(() => {
-    fetchService();
-    fetchSlots();
-    fetchToken();
-  }, []);
+    const t2 = setTimeout(() => setSlotsDetails(slotsData), 2000);
+    const t3 = setTimeout(() => setTokenDetails(tokens), 2000);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, [serviceId]);
 
   const statsData = useMemo(() => {
     const activeSlots = slotsDetails.filter(
@@ -76,12 +63,10 @@ const ServicePage = () => {
         activeSlots.some((slot) => slot.id === t.slotId),
     );
 
-    console.log(queue);
-
     return {
       activeSlots,
       avgTime,
-      totalSlots: slotsDetails.length,
+      totalSlots: activeSlots.length + upcomingSlots.length,
       queueLength: queue.length,
       upcomingSlots,
       pausedSlots,

@@ -1,5 +1,14 @@
+function parseTime(timeString: string) {
+  const date = new Date(timeString);
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`Invalid time string: ${timeString}`);
+  }
+
+  return date;
+}
+
 export function getFormattedTime(timeString: string) {
-  const time = new Date(timeString);
+  const time = parseTime(timeString);
 
   const format = time.toLocaleTimeString("en-IN", {
     hour: "2-digit",
@@ -11,8 +20,8 @@ export function getFormattedTime(timeString: string) {
 }
 
 export function getTimeDifference(startTime: string, endTime: string) {
-  const start = new Date(startTime);
-  const end = new Date(endTime);
+  const start = parseTime(startTime);
+  const end = parseTime(endTime);
 
   const diffInMs = end.getTime() - start.getTime();
 
@@ -27,7 +36,7 @@ export function getProgressPercentage(
   currentToken: number,
   bookedCount: number,
 ) {
-  if (bookedCount === 0) return 0;
-
-  return Math.round((currentToken / bookedCount) * 100);
+  if (bookedCount <= 0) return 0;
+  const percent = Math.round((currentToken / bookedCount) * 100);
+  return Math.min(100, Math.max(0, percent));
 }
