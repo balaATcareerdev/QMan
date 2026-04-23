@@ -60,7 +60,7 @@ const NowServicing = () => {
 
           <div className="flex gap-2">
             <PrimaryPurpSlot text="Start Token" />
-            <button className="border border-[#9711FB] hover:bg-[#9711FB]/10 font-light textsm rounded-sm px-2.5 py-1 transition-colors duration-300 ease-in-out">
+            <button className="border border-[#9711FB] hover:bg-[#9711FB]/10 font-light text-sm rounded-sm px-2.5 py-1 transition-colors duration-300 ease-in-out">
               Skip Token
             </button>
           </div>
@@ -85,16 +85,17 @@ const NowServicing = () => {
             <p>
               Started Service:{" "}
               <span className="text-white">
-                {getFormattedTime(currentToken.startedServiceTime!)}
+                {currentToken.startedServiceTime
+                  ? getFormattedTime(currentToken.startedServiceTime)
+                  : "Not Started"}
               </span>
             </p>
 
             <p>
               Next:{" "}
               <span className="text-white">
-                #
                 {currentToken.next?.nextId
-                  ? currentToken.next.slotNumber
+                  ? `#${currentToken.next.slotNumber}`
                   : "No Next Token"}
               </span>
             </p>
