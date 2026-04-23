@@ -115,6 +115,7 @@ const ServicePage = () => {
                         slot.bookedCount,
                       )}
                       isPaused={slot.isPaused}
+                      id={slot.id}
                     />
                   ))}
                 </div>

@@ -26,6 +26,10 @@ export interface TokenType {
   id: string;
   slotId: string;
   slotNumber: number;
+  next: {
+    nextId: string;
+    slotNumber: number;
+  } | null;
   status: string;
   createdAt: string;
   startedServiceTime: string | null;

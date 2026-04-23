@@ -1,4 +1,4 @@
-function parseTime(timeString: string) {
+export function parseTime(timeString: string) {
   const date = new Date(timeString);
   if (Number.isNaN(date.getTime())) {
     throw new Error(`Invalid time string: ${timeString}`);
@@ -25,11 +25,23 @@ export function getTimeDifference(startTime: string, endTime: string) {
 
   const diffInMs = end.getTime() - start.getTime();
 
-  // Convert milliseconds to hours and minutes
-  const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
-  const diffInMinutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
+  const expired = diffInMs < 0;
 
-  return { hours: diffInHours, minutes: diffInMinutes };
+  const absDiffInMs = Math.abs(diffInMs);
+
+  // Convert milliseconds to hours and minutes
+  const diffInHours = Math.floor(absDiffInMs / (1000 * 60 * 60));
+  const diffInMinutes = Math.floor(
+    (absDiffInMs % (1000 * 60 * 60)) / (1000 * 60),
+  );
+  const diffInSeconds = Math.floor((absDiffInMs % (1000 * 60)) / 1000);
+
+  return {
+    hours: diffInHours,
+    minutes: diffInMinutes,
+    seconds: diffInSeconds,
+    expired,
+  };
 }
 
 export function getProgressPercentage(
