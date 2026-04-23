@@ -1,5 +1,6 @@
 import PrimaryPinkService from "@/component/Buttons/PrimaryPinkService";
 import SecondaryPinkService from "@/component/Buttons/SecondaryPinkService";
+import { useNavigate } from "react-router";
 
 interface SlotCardProps {
   slotName: string;
@@ -13,6 +14,7 @@ interface SlotCardProps {
   servicing: number;
   progress: number;
   isPaused: boolean;
+  id: string;
 }
 
 const SlotCard = ({
@@ -24,7 +26,10 @@ const SlotCard = ({
   servicing,
   progress,
   isPaused,
+  id,
 }: SlotCardProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="h-28 w-5xl grid grid-cols-[30%_30%_20%_20%] border-white hover:border-[#FF1994] border p-3 justify-center items-center bg-linear-to-r from-[#420354] to-[#000000] transition-colors duration-300 rounded-sm">
       <div className="flex flex-col justify-center items-start">
@@ -56,7 +61,10 @@ const SlotCard = ({
       </div>
 
       <div className="flex flex-col justify-center items-center gap-2">
-        <PrimaryPinkService text="Manage" />
+        <PrimaryPinkService
+          text="Manage"
+          onClick={() => navigate(`/client/slot/${id}`)}
+        />
         {isPaused ? (
           <SecondaryPinkService text="Resume" />
         ) : (
