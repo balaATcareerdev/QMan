@@ -1,10 +1,14 @@
+import type { PriceType } from "@/types/types";
+
 export const Plan = {
   Free: "Free",
   Growth: "Growth",
   Ultimate: "Ultimate",
 };
 
-export const pricing = [
+export type PlanType = (typeof Plan)[keyof typeof Plan];
+
+export const pricing: PriceType[] = [
   {
     plan: Plan.Free,
     price: 0,

@@ -40,15 +40,22 @@ const PriceAndFeature = ({ price }: { price: PriceType }) => {
         </div>
 
         <div className="flex justify-center items-center">
-          {getBuyButtonText(price.plan, plan).text === "Lower" ? (
-            <></>
-          ) : (
-            <button
-              className={`px-5 py-2.5 bg-linear-to-r from-[#D295FF] to-[#A1B5F7] text-xs text-[#9711FB] rounded-md transition-colors duration-300 ease-in-out  ${price.plan === plan ? "disabled" : " hover:from-[#D295FF]/50 hover:to-[#A1B5F7]/50 hover:text-white"} `}
-            >
-              {getBuyButtonText(price.plan, plan).text}
-            </button>
-          )}
+          {(() => {
+            const buyButton = getBuyButtonText(price.plan, plan);
+
+            if (buyButton.text === "Lower") return null;
+
+            const isCurrent = price.plan === plan;
+
+            return (
+              <button
+                disabled={isCurrent}
+                className={`px-5 py-2.5 bg-linear-to-r from-[#D295FF] to-[#A1B5F7] text-xs text-[#9711FB] rounded-md transition-colors duration-300 ease-in-out  ${price.plan === plan ? "disabled" : " hover:from-[#D295FF]/50 hover:to-[#A1B5F7]/50 hover:text-white"} `}
+              >
+                {getBuyButtonText(price.plan, plan).text}
+              </button>
+            );
+          })()}
         </div>
       </div>
     </section>

@@ -16,11 +16,12 @@ const PricingPage = () => {
 
       <section className="relative z-30">
         <h1 className="text-5xl text-white px-20 py-10">Pricing</h1>
-        <div
-          className={`grid grid-cols-${prices.length} justify-center gap-10 px-20`}
-        >
+        <div className={`grid grid-cols-3 justify-center gap-10 px-20`}>
           {prices.map(
-            (price) => !price.isDisabled && <PriceAndFeature price={price} />,
+            (price, index) =>
+              !price.isDisabled && (
+                <PriceAndFeature price={price} key={index} />
+              ),
           )}
         </div>
       </section>
