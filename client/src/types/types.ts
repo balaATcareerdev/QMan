@@ -35,3 +35,13 @@ export interface TokenType {
   startedServiceTime: string | null;
   endServiceTime: string | null;
 }
+
+export interface PriceType {
+  plan: string;
+  price: number;
+  tokens: number;
+  description: string;
+  CoreCapacity: string[];
+  isPopular: boolean;
+  isDisabled: boolean;
+}
