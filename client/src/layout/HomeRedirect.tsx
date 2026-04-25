@@ -1,13 +1,10 @@
+import { user } from "@/assets/mockUser";
 import { Navigate } from "react-router";
 
 const HomeRedirect = () => {
-  const user = {
-    role: "client",
-  };
-
   if (!user) return <Navigate to="/login" />;
 
-  if (user.role === "client") return <Navigate to="/client" />;
+  if (user.role === "Client") return <Navigate to="/client" />;
   return <Navigate to="/cust" />;
 };
 
