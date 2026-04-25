@@ -9,6 +9,9 @@ import CustomerHome from "@/pages/Customer/CustomerHome";
 import CustomerLayout from "@/layout/CustomerLayout";
 import ClientLayout from "@/layout/ClientLayout";
 import HomeRedirect from "@/layout/HomeRedirect";
+import NotFound from "@/pages/NotFound";
+import ProtectedRoute from "@/component/ProtectRoute/ProtectedRoute";
+import UnAuthorized from "@/pages/UnAuthorized";
 
 const App = () => {
   return (
@@ -16,19 +19,25 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomeRedirect />} />
 
-        <Route path="/cust" element={<CustomerLayout />}>
-          <Route index element={<CustomerHome />} />
-          <Route path="booked" element={<Booked />} />
+        <Route element={<ProtectedRoute allowedRole="Customer" />}>
+          <Route path="/cust" element={<CustomerLayout />}>
+            <Route index element={<CustomerHome />} />
+            <Route path="booked" element={<Booked />} />
+          </Route>
         </Route>
 
-        <Route path="/client" element={<ClientLayout />}>
-          <Route index element={<Home />} />
-          <Route path="pricing" element={<PricingPage />} />
-          <Route path="service/:serviceId" element={<ServicePage />} />
-          <Route path="slot/:slotId" element={<SlotPage />} />
+        <Route element={<ProtectedRoute allowedRole="Client" />}>
+          <Route path="/client" element={<ClientLayout />}>
+            <Route index element={<Home />} />
+            <Route path="pricing" element={<PricingPage />} />
+            <Route path="service/:serviceId" element={<ServicePage />} />
+            <Route path="slot/:slotId" element={<SlotPage />} />
+          </Route>
         </Route>
 
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/unauthorized" element={<UnAuthorized />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
