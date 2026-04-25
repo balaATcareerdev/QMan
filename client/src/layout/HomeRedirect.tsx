@@ -4,7 +4,7 @@ import { Navigate } from "react-router";
 const HomeRedirect = () => {
   if (!user) return <Navigate to="/login" />;
 
-  if (user.role === "client") return <Navigate to="/client" />;
+  if (user.role === "Client") return <Navigate to="/client" />;
   return <Navigate to="/cust" />;
 };
 
