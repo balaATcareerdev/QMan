@@ -4,7 +4,7 @@ import SlotList from "@/component/Customer/SlotList";
 import TabMenu from "@/component/Customer/TabMenu";
 import type { ServiceType, SlotType } from "@/types/types";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
 
 const CustomerHome = () => {
@@ -37,6 +37,8 @@ const CustomerHome = () => {
   const [slots, setSlots] = useState<SlotType[]>([]);
   const [isSlotLoading, setIsSlotLoading] = useState<boolean>(true);
 
+  const slotTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const fetchServices = async () => {
     setServices(servicesData);
     setIsServiceLoading(false);
@@ -50,7 +52,9 @@ const CustomerHome = () => {
 
     setIsSlotLoading(true);
 
-    const timer = setTimeout(() => {
+    if (slotTimerRef.current) clearTimeout(slotTimerRef.current);
+
+    slotTimerRef.current = setTimeout(() => {
       setSlots([
         {
           id: "slot_001",
@@ -68,8 +72,8 @@ const CustomerHome = () => {
         },
 
         {
-          id: "slot_001",
-          slotName: "Library Slot 1",
+          id: "slot_002",
+          slotName: "Library Slot 2",
           isPaused: false,
           serviceId: "srv_001",
           startTime: "2026-04-18T12:00:00Z",
@@ -85,8 +89,6 @@ const CustomerHome = () => {
 
       setIsSlotLoading(false);
     }, 2000);
-
-    return () => clearTimeout(timer);
   };
 
   useEffect(() => {
@@ -95,15 +97,14 @@ const CustomerHome = () => {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [activeTab]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchServices();
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [activeTab]);
+    return () => {
+      const timer = slotTimerRef.current;
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
 
   return (
     <div className="bg-linear-to-b from-black to-[#10040F] min-h-screen text-white pt-40 grid grid-cols-[20%_1fr_25%]">
