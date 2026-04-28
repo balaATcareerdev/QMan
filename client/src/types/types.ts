@@ -4,6 +4,7 @@ export interface ServiceType {
   description: string;
   date: string;
   status: string;
+  isFav: boolean;
   createdAt: string;
 }
 

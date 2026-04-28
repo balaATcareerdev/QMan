@@ -6,6 +6,7 @@ export const servicesData = [
       "Quiet study and reading support for visitors who need focused access time.",
     date: "2026-04-18",
     status: "active",
+    isFav: false,
     createdAt: "2026-04-16T10:30:00Z",
   },
   {
@@ -15,6 +16,7 @@ export const servicesData = [
       "Fast-moving midday queue for meal pickup and short break scheduling.",
     date: "2026-04-18",
     status: "active",
+    isFav: false,
     createdAt: "2026-04-16T09:15:00Z",
   },
   {
@@ -24,6 +26,7 @@ export const servicesData = [
       "Reserved room access for team discussions, planning, and small presentations.",
     date: "2026-04-19",
     status: "upcoming",
+    isFav: false,
     createdAt: "2026-04-17T14:20:00Z",
   },
   {
@@ -33,6 +36,7 @@ export const servicesData = [
       "Personal care service queue for grooming appointments and beauty treatments.",
     date: "2026-04-18",
     status: "paused",
+    isFav: false,
     createdAt: "2026-04-16T16:45:00Z",
   },
   {
@@ -42,6 +46,7 @@ export const servicesData = [
       "Healthcare visit coordination for routine checkups and patient consultations.",
     date: "2026-04-20",
     status: "upcoming",
+    isFav: false,
     createdAt: "2026-04-17T11:10:00Z",
   },
   {
@@ -51,6 +56,7 @@ export const servicesData = [
       "Financial service line for account help, transactions, and quick branch support.",
     date: "2026-04-18",
     status: "active",
+    isFav: false,
     createdAt: "2026-04-16T13:00:00Z",
   },
   {
@@ -60,6 +66,7 @@ export const servicesData = [
       "Workout slot management for fitness training and equipment access windows.",
     date: "2026-04-19",
     status: "upcoming",
+    isFav: false,
     createdAt: "2026-04-17T08:40:00Z",
   },
   {
@@ -69,6 +76,7 @@ export const servicesData = [
       "Vehicle maintenance queue for inspection, repairs, and routine service work.",
     date: "2026-04-17",
     status: "completed",
+    isFav: false,
     createdAt: "2026-04-14T12:25:00Z",
   },
   {
@@ -78,6 +86,7 @@ export const servicesData = [
       "Document processing support for passport applications, renewals, and verification.",
     date: "2026-04-20",
     status: "upcoming",
+    isFav: false,
     createdAt: "2026-04-17T17:50:00Z",
   },
   {
@@ -87,6 +96,7 @@ export const servicesData = [
       "Enrollment assistance for admissions, records, and student onboarding steps.",
     date: "2026-04-16",
     status: "completed",
+    isFav: false,
     createdAt: "2026-04-13T10:05:00Z",
   },
 ];
