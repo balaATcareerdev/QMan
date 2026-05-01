@@ -1,10 +1,10 @@
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const CustomerNavBar = () => {
   const location = useLocation();
 
   return (
-    <nav className="absolute grid grid-cols-3 w-full pb-2 text-white border-b border-[#525252]">
+    <nav className="absolute grid grid-cols-3 w-full pb-2 text-white border-b border-[#525252] p-2">
       {/* Profile */}
       <div className="flex gap-5 justify-start items-center">
         {location.pathname !== "/cust/booked" && (
@@ -30,7 +30,9 @@ const CustomerNavBar = () => {
 
       {/* Menu */}
       <div className="flex text-2xl justify-around items-start pt-5">
-        <p className="cursor-pointer">Home</p>
+        <Link to={"/"} className="cursor-pointer">
+          Home
+        </Link>
         <p className="cursor-pointer">History</p>
         <p className="cursor-pointer">Notification</p>
       </div>

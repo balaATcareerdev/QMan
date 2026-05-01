@@ -1,2 +1,3 @@
 import colorBg from "@/assets/color-splash.svg?url";
-export { colorBg };
+import loginBg from "@/assets/login_bg.png";
+export { colorBg, loginBg };
