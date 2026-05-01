@@ -1,5 +1,18 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import z from "zod";
+
+const schema = z.object({
+  serviceName: z.string().min(1, { message: "Service Name is required" }),
+  serviceDescription: z.string().min(1, {
+    message: "Service Description is required",
+  }),
+  serviceDate: z.string().min(1, { message: "Service Date is required" }),
+});
+
+type formDataType = z.infer<typeof schema>;
 
 const CreateServiceModal = ({
   open,
@@ -8,14 +21,15 @@ const CreateServiceModal = ({
   open: boolean;
   onClose: () => void;
 }) => {
-  const [formData, setFormData] = useState({
-    serviceName: "",
-    serviceDescription: "",
-    serviceDate: "",
-  });
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const submitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<formDataType>({
+    resolver: zodResolver(schema),
+  });
 
   const clearSubmitTimer = (): void => {
     if (submitTimerRef.current) {
@@ -30,30 +44,12 @@ const CreateServiceModal = ({
     };
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const createService = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // Simulate API call
-    clearSubmitTimer();
-    setIsLoading(true);
-
-    submitTimerRef.current = setTimeout(() => {
-      setIsLoading(false);
-      onClose();
-    }, 2000);
-  };
-
   const handleClose = () => {
-    clearSubmitTimer();
-    setIsLoading(false);
     onClose();
+  };
+
+  const submitForm: SubmitHandler<formDataType> = async (data) => {
+    console.log(data);
   };
 
   if (!open) return null;
@@ -72,8 +68,8 @@ const CreateServiceModal = ({
         </button>
 
         <form
-          onSubmit={createService}
-          className="bg-linear-to-b from-[#000000] to-[#140B1B] text-gray-500 max-w-96 mx-4 md:p-6 p-4 text-sm rounded-lg shadow-lg"
+          onSubmit={handleSubmit(submitForm)}
+          className="bg-linear-to-b from-[#1b1b1b] to-[#140B1B] text-gray-500 max-w-96 mx-4 md:p-6 p-4 text-sm rounded-lg shadow-lg"
         >
           <h2 className="text-2xl font-semibold mb-6 text-center text-white">
             Create Service
@@ -82,34 +78,38 @@ const CreateServiceModal = ({
           <input
             className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white"
             placeholder="Service Name"
-            name="serviceName"
-            value={formData.serviceName}
-            onChange={handleChange}
+            {...register("serviceName")}
           />
+
+          {errors.serviceName && (
+            <div>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.serviceName.message}
+              </p>
+            </div>
+          )}
 
           <input
             className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white"
             placeholder="Description"
-            name="serviceDescription"
-            value={formData.serviceDescription}
-            onChange={handleChange}
+            {...register("serviceDescription")}
           />
 
           <input
             className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white scheme-dark"
             placeholder="Date"
             type="date"
-            name="serviceDate"
-            value={formData.serviceDate}
-            onChange={handleChange}
+            {...register("serviceDate")}
           />
 
           <button
             className="w-full my-3 bg-[#9711FB] hover:bg-[#9711FB]/80 transition py-2.5 rounded text-white flex justify-center items-center gap-1"
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
             Create
-            {isLoading && <LoaderCircle size={20} className="animate-spin" />}
+            {isSubmitting && (
+              <LoaderCircle size={20} className="animate-spin" />
+            )}
           </button>
         </form>
       </div>

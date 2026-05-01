@@ -1,45 +1,43 @@
 import type { ServiceType } from "@/types/types";
+import { zodResolver } from "@hookform/resolvers/zod/src/index.js";
 import { LoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import z from "zod";
+
+const schema = z.object({
+  serviceName: z.string().min(1, { message: "Service Name is required" }),
+  serviceDescription: z.string().min(1, {
+    message: "Service Description is required",
+  }),
+  serviceDate: z.string().min(1, { message: "Service Date is required" }),
+});
+
+type formDataType = z.infer<typeof schema>;
 
 const EditServiceModal = ({
   open,
-  isOpen,
   onClose,
   service,
 }: {
   open: boolean;
-  isOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: () => void;
   service: ServiceType;
 }) => {
-  const [formData, setFormData] = useState(() => ({
-    serviceName: service.name || "",
-    serviceDescription: service.description || "",
-    serviceDate: new Date(service.createdAt).toISOString().split("T")[0] || "",
-  }));
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<formDataType>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      serviceName: service.name,
+      serviceDescription: service.description,
+      serviceDate: new Date(service.createdAt).toISOString().split("T")[0],
+    },
+  });
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const editService = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // Simulate API call
-    setIsLoading(true);
-
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      isOpen(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
+  const submitForm: SubmitHandler<formDataType> = async (data) => {
+    console.log(data);
   };
 
   if (!open) return null;
@@ -58,8 +56,8 @@ const EditServiceModal = ({
         </button>
 
         <form
-          onSubmit={editService}
-          className="bg-linear-to-b from-[#000000] to-[#140B1B] text-gray-500 max-w-96 mx-4 md:p-6 p-4 text-sm rounded-lg shadow-lg"
+          onSubmit={handleSubmit(submitForm)}
+          className="bg-linear-to-b from-[#171616] to-[#140B1B] text-gray-500 max-w-96 mx-4 md:p-6 p-4 text-sm rounded-lg shadow-lg min-w-96"
         >
           <h2 className="text-2xl font-semibold mb-6 text-center text-white">
             Edit Service
@@ -68,34 +66,53 @@ const EditServiceModal = ({
           <input
             className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white"
             placeholder="Service Name"
-            name="serviceName"
-            value={formData.serviceName}
-            onChange={handleChange}
+            {...register("serviceName")}
           />
+
+          {errors.serviceName && (
+            <div>
+              <p className="text-red-500 text-sm">
+                {errors.serviceName.message}
+              </p>
+            </div>
+          )}
 
           <input
             className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white"
             placeholder="Description"
-            name="serviceDescription"
-            value={formData.serviceDescription}
-            onChange={handleChange}
+            {...register("serviceDescription")}
           />
+
+          {errors.serviceDescription && (
+            <div>
+              <p className="text-red-500 text-sm">
+                {errors.serviceDescription.message}
+              </p>
+            </div>
+          )}
 
           <input
             className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white scheme-dark"
             placeholder="Date"
             type="date"
-            name="serviceDate"
-            value={formData.serviceDate}
-            onChange={handleChange}
+            {...register("serviceDate")}
           />
+          {errors.serviceDate && (
+            <div>
+              <p className="text-red-500 text-sm">
+                {errors.serviceDate.message}
+              </p>
+            </div>
+          )}
 
           <button
             className="w-full my-3 bg-[#9711FB] hover:bg-[#9711FB]/80 transition py-2.5 rounded text-white flex justify-center items-center gap-1"
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
             Edit
-            {isLoading && <LoaderCircle size={20} className="animate-spin" />}
+            {isSubmitting && (
+              <LoaderCircle size={20} className="animate-spin" />
+            )}
           </button>
         </form>
       </div>
