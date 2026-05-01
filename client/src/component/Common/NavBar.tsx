@@ -23,7 +23,7 @@ const NavBar = () => {
       <div className="w-1/3 text-xl flex justify-center items-center gap-6">
         <div className="grid grid-rows-[50px_1fr] gap-1">
           <Link
-            to="/"
+            to="/client"
             className={`flex gap-2 justify-center items-center ${location.pathname === "/client" ? "text-[#9711FB]" : ""}`}
           >
             <House size={20} />

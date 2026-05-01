@@ -1,6 +1,7 @@
 import type { ServiceType } from "@/types/types";
-import { zodResolver } from "@hookform/resolvers/zod/src/index.js";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
+import { useEffect } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import z from "zod";
 
@@ -26,6 +27,7 @@ const EditServiceModal = ({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<formDataType>({
     resolver: zodResolver(schema),
@@ -35,6 +37,14 @@ const EditServiceModal = ({
       serviceDate: new Date(service.createdAt).toISOString().split("T")[0],
     },
   });
+
+  useEffect(() => {
+    reset({
+      serviceName: service.name,
+      serviceDescription: service.description,
+      serviceDate: new Date(service.createdAt).toISOString().split("T")[0],
+    });
+  }, [service, reset]);
 
   const submitForm: SubmitHandler<formDataType> = async (data) => {
     console.log(data);

@@ -95,12 +95,28 @@ const CreateServiceModal = ({
             {...register("serviceDescription")}
           />
 
+          {errors.serviceDescription && (
+            <div>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.serviceDescription.message}
+              </p>
+            </div>
+          )}
+
           <input
             className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white scheme-dark"
             placeholder="Date"
             type="date"
             {...register("serviceDate")}
           />
+
+          {errors.serviceDate && (
+            <div>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.serviceDate.message}
+              </p>
+            </div>
+          )}
 
           <button
             className="w-full my-3 bg-[#9711FB] hover:bg-[#9711FB]/80 transition py-2.5 rounded text-white flex justify-center items-center gap-1"

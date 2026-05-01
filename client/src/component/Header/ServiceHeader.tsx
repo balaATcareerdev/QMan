@@ -18,7 +18,10 @@ const ServiceHeader = ({ category }: ServiceHeaderProps) => {
       <hr className="flex-1 h-px bg-[#A591E3]" />
 
       {/* Right */}
-      <button className="flex items-center gap-1 text-nowrap text-lg active:scale-105 justify-center">
+      <button
+        onClick={() => {}}
+        className="flex items-center gap-1 text-nowrap text-lg active:scale-105 justify-center"
+      >
         View All
         <ArrowRight />
       </button>
