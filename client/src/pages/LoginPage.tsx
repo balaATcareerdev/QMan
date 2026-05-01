@@ -13,22 +13,30 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 
-const schema = z.object({
+const baseSchema = z.object({
   email: z.email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long" }),
-  fname: z.string().optional(),
-  lname: z.string().optional(),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters long",
+  }),
 });
 
-type formField = z.infer<typeof schema>;
+const registerSchema = baseSchema.extend({
+  fname: z.string().min(1, "First name is required"),
+  lname: z.string().min(1, "Last name is required"),
+});
+
+const loginSchema = baseSchema;
+
+type loginFormType = z.infer<typeof loginSchema>;
+type registerFormType = z.infer<typeof registerSchema>;
+
+type formField = loginFormType | registerFormType;
 
 const LoginPage = () => {
   const [type, setType] = useState<"login" | "register">("login");
 
   const navigate = useNavigate();
-
+  const schema = type === "register" ? registerSchema : loginSchema;
   const {
     register,
     handleSubmit,
@@ -104,7 +112,7 @@ const LoginPage = () => {
                     placeholder="Enter First Name"
                     {...register("fname")}
                   />
-                  {errors.fname && (
+                  {type === "register" && "fname" in errors && errors.fname && (
                     <div className="group">
                       <CircleAlert color="#c93626" className="cursor-pointer" />
 
@@ -122,7 +130,7 @@ const LoginPage = () => {
                     placeholder="Enter Last Name"
                     {...register("lname")}
                   />
-                  {errors.lname && (
+                  {type === "register" && "lname" in errors && errors.lname && (
                     <div className="group">
                       <CircleAlert color="#c93626" className="cursor-pointer" />
 

@@ -1,3 +1,5 @@
+import { Plus } from "lucide-react";
+
 const PrimaryPurp = ({
   text,
   setOpenCreate,
@@ -7,10 +9,12 @@ const PrimaryPurp = ({
 }) => {
   return (
     <button
-      className="bg-[#9711FB] hover:bg-[#832bc6]/70 transition-colors duration-100 text-white py-2.5 px-2.5 rounded-lg"
+      type="button"
+      className="bg-linear-to-r from-[#9711FB] to-[#FA73C4] flex justify-center items-center p-2.5 rounded-lg hover:from-[#9711FB]/50 hover:to-[#FA73C4]/50 transition-colors duration-300"
       onClick={() => setOpenCreate(true)}
     >
-      {text}
+      <Plus />
+      <span className="text-2xl font-normal">{text}</span>
     </button>
   );
 };

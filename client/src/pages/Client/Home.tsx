@@ -1,9 +1,9 @@
 import { servicesData, slotsData } from "@/assets";
+import ServiceHeader from "@/component/Header/ServiceHeader";
 import HeroSection from "@/component/Home/HeroSection";
 import ServiceCard from "@/component/Home/ServiceCard";
 import UpcomingService from "@/component/Home/UpcomingService";
 import EditServiceModal from "@/component/Modals/EditServiceModal";
-import CategoryHeader from "@/component/Title/CategoryHeader";
 import type { ServiceType, SlotType } from "@/types/types";
 import { useEffect, useMemo, useState } from "react";
 
@@ -91,7 +91,7 @@ const Home = () => {
   }, [services, slots]);
 
   return (
-    <div className="bg-linear-to-b from-[#000000] to-[#140B1B]">
+    <div className="bg-[#01010f]">
       <HeroSection
         activeService={stats.activeService.length}
         avgTime={stats.avgTime}
@@ -101,10 +101,9 @@ const Home = () => {
 
       {stats.activeService.length > 0 && (
         <section className="px-20">
-          <CategoryHeader text={"Active"} />
-          <hr className="mt-2 border-[#CC8CFC]" />
+          <ServiceHeader category="Active" />
 
-          <div className="flex flex-col justify-center items-center gap-20 pt-5">
+          <div className="flex flex-col justify-center items-center gap-5 pt-5 px-10">
             {stats.activeService.map((ser, index) => (
               <ServiceCard
                 key={index}
@@ -122,11 +121,9 @@ const Home = () => {
 
       {stats.upcomingSlotsPerService.length > 0 && (
         <section className="px-20 pb-20">
-          <CategoryHeader text={"Upcoming"} />
+          <ServiceHeader category="Upcoming" />
 
-          <hr className="mt-2 border-[#CC8CFC]" />
-
-          <div className="flex flex-col justify-center items-center gap-20 pt-5">
+          <div className="flex flex-col justify-center items-center gap-5 pt-5 px-10">
             {stats.upcomingService.map((ser) => (
               <UpcomingService
                 key={ser.id}
@@ -151,7 +148,6 @@ const Home = () => {
         <EditServiceModal
           key={selectedService?.id}
           open={openEdit}
-          isOpen={setOpenEdit}
           onClose={() => setOpenEdit(false)}
           service={selectedService}
         />
