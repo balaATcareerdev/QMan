@@ -184,7 +184,10 @@ const LoginPage = () => {
             </div>
 
             <div className="flex justify-center items-center">
-              <button className="text-lg bg-linear-to-r from-[#4B325E] to-[#FA73C4] hover:from-[#4B325E]/50 hover:to-[#FA73C4]/50 w-full p-3 rounded-sm transition-all duration-300 flex justify-center items-center gap-2">
+              <button
+                className="text-lg bg-linear-to-r from-[#4B325E] to-[#FA73C4] hover:from-[#4B325E]/50 hover:to-[#FA73C4]/50 w-full p-3 rounded-sm transition-all duration-300 flex justify-center items-center gap-2"
+                disabled={isSubmitting}
+              >
                 {type === "register" ? "Register" : "Login"}
                 {isSubmitting && <LoaderCircle className="animate-spin" />}
               </button>
