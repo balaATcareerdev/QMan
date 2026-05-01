@@ -123,7 +123,7 @@ export const slotsData = [
     serviceId: "srv_001",
     startTime: "2026-04-18T12:40:00Z",
     endTime: "2026-04-18T14:30:00Z",
-    status: "active",
+    status: "upcoming",
     capacity: 20,
     bookedCount: 10,
     currentToken: 5,
