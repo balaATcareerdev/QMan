@@ -1,8 +1,8 @@
 import { servicesData, slotsData, tokens } from "@/assets";
+import ServiceHeader from "@/component/Header/ServiceHeader";
 import HeroSection from "@/component/Service/HeroSection";
 import SlotCard from "@/component/Service/SlotCard";
 import UpcomingSlotCard from "@/component/Service/UpcomingSlotCard";
-import CategoryHeader from "@/component/Title/CategoryHeader";
 import type { ServiceType, SlotType, TokenType } from "@/types/types";
 import {
   getFormattedTime,
@@ -74,7 +74,7 @@ const ServicePage = () => {
   }, [serviceId, slotsDetails, tokenDetails]);
 
   return (
-    <div className="bg-linear-to-b from-[#14021E] to-[#14021E] min-h-screen">
+    <div className="bg-linear-to-b from-[#130423] to-[#000000] min-h-screen">
       {isLoading ? (
         <div className="bg-linear-to-b from-[#14021E] to-[#14021E] flex justify-center items-center min-h-screen">
           <LoaderCircle size={40} color="white" className="animate-spin" />
@@ -83,19 +83,17 @@ const ServicePage = () => {
         <>
           <HeroSection
             serviceName={service.name}
+            serviceDesc={service.description}
             activeSlots={statsData.activeSlots.length}
             avgTime={statsData.avgTime}
             total={statsData.totalSlots}
             queueLength={statsData.queueLength}
           />
 
-          <section className="px-10">
-            <h1 className="font-medium text-5xl text-[#A9A5AC]">SLOTS</h1>
+          <section className="px-20">
+            <ServiceHeader category="Active" />
 
-            <CategoryHeader text={"Active"} />
-            <hr className="border-[#DEB2FF] mt-5" />
-
-            <div className="py-20">
+            <div className="mt-10">
               {statsData.activeSlots.length > 0 ? (
                 <div className="flex flex-col justify-center items-center gap-10">
                   {statsData.activeSlots.map((slot) => (
@@ -130,9 +128,8 @@ const ServicePage = () => {
             </div>
           </section>
 
-          <section className="px-10 pb-20">
-            <CategoryHeader text={"Upcoming"} />
-            <hr className="border-[#DEB2FF] mt-5" />
+          <section className="px-20">
+            <ServiceHeader category="Upcoming" />
 
             {statsData.upcomingSlots.length > 0 ? (
               <div className="flex justify-center items-center gap-10 py-20">
