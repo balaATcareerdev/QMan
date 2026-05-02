@@ -37,7 +37,7 @@ const HeroSection = ({
   }
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden text-white pt-30 px-20">
+    <section className="relative w-full overflow-hidden text-white pt-30 px-20">
       <div className="grid grid-cols-2">
         <div className="text-5xl font-bold gap-2 flex flex-col">
           <h1 className="text-white">Book Your Service</h1>
