@@ -8,7 +8,10 @@ const SecondaryPinkService = ({
   Icon?: LucideIcon;
 }) => {
   return (
-    <button className="border-[#FF3DDB] border-2 text-lg  text-white rounded-sm flex justify-center items-center hover:bg-[#FF3DDB]/10 transition-colors duration-300 px-5 py-2 gap-2">
+    <button
+      type="button"
+      className="border-[#FF3DDB] border-2 text-lg  text-white rounded-sm flex justify-center items-center hover:bg-[#FF3DDB]/10 transition-colors duration-300 px-5 py-2 gap-2"
+    >
       {text === "Pause" ? (
         <Pause size={15} />
       ) : text === "Resume" ? (
