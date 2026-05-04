@@ -1,5 +1,6 @@
 import Bubble from "@/component/Slot/Bubble";
 import { getFormattedTime } from "@/util/slotUtils";
+import { CalendarCheck, CircleCheck, Clock, HourglassIcon } from "lucide-react";
 
 interface HeroSectionProps {
   stats: {
@@ -11,6 +12,7 @@ interface HeroSectionProps {
   slotName: string;
   startTime: string;
   endTime: string;
+  status: string;
 }
 
 const HeroSection = ({
@@ -18,34 +20,57 @@ const HeroSection = ({
   slotName,
   startTime,
   endTime,
+  status,
 }: HeroSectionProps) => {
   return (
-    <div className="relative w-full z-20 pb-32">
-      <div className="pt-30 px-20 grid grid-cols-[30%_50%_20%] relative  gap-10">
+    <div className="relative w-full z-20">
+      <div className="pt-30 px-20 grid grid-cols-[30%_1fr] relative  gap-10">
         {/* Left Side */}
-        <div className="flex flex-col items-start justify-center gap-1">
+        <div className="flex flex-col items-start justify-center gap-2">
           <h1 className="font-medium text-5xl">{slotName}</h1>
+          <div className="bg-[#A35ED7]/10 flex items-center gap-2 px-3 py-1 rounded-sm border border-[#2d0e46]">
+            <span className="w-3 h-3 rounded-full bg-[#3ed978]"></span>
+            <span className="text-[#3ed978]">{status.toLocaleUpperCase()}</span>
+          </div>
           <p className="font-medium text-2xl">
             Slot Timing :{" "}
-            <span className="text-[#A5A5A5]">
+            <span className="text-[#A35ED7]">
               {getFormattedTime(startTime)} - {getFormattedTime(endTime)}
             </span>
           </p>
         </div>
 
         {/* Right Side */}
-        <div className="bg-[#9711FB]/10 flex justify-around p-2 rounded-sm border border-[#585858] items-center">
-          <Bubble text={"Total Booked"} value={stats.totalBooked} />
-          <span className="bg-[#767474] h-8 w-0.5 rounded-sm"></span>
-          <Bubble text={"Completed"} value={stats.completed} />
-          <span className="bg-[#767474] h-8 w-0.5 rounded-sm"></span>
-          <Bubble text={"Remaining"} value={stats.remaining} />
-        </div>
+        <div className="flex justify-around p-2 rounded-sm items-center">
+          <Bubble
+            Icon={CalendarCheck}
+            color={"#bc82f8"}
+            header="Total Booked"
+            value={stats.totalBooked}
+          />
 
-        <div className="flex justify-start items-center">
-          <div className="bg-[#9711FB]/10 flex p-2 rounded-sm border border-[#585858] items-center">
-            <Bubble text={"Avg Time"} value={stats.avgTime} type="s" />
-          </div>
+          <Bubble
+            Icon={CircleCheck}
+            color={"#2dc16a"}
+            header="Completed"
+            value={stats.completed}
+          />
+
+          <Bubble
+            Icon={HourglassIcon}
+            color={"#fe8217"}
+            header="Remaining"
+            value={stats.remaining}
+          />
+
+          <Bubble
+            Icon={Clock}
+            color={"#bc82f8"}
+            header="Avg Time"
+            value={stats.avgTime}
+            type="s"
+            subHeader="per person"
+          />
         </div>
       </div>
     </div>
