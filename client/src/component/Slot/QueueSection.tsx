@@ -14,10 +14,12 @@ const QueueSection = () => {
     if (!slotId) return;
 
     const timer = setTimeout(() => {
-      fetchQueueList(slotId).then((queues) => {
-        setUpcomingQueue(queues);
-        setIsLoading(false);
-      });
+      fetchQueueList(slotId)
+        .then((queues) => {
+          setUpcomingQueue(queues);
+        })
+        .catch(() => {})
+        .finally(() => setIsLoading(false));
     }, 2000);
 
     return () => clearTimeout(timer);

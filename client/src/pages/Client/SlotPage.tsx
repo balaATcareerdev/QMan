@@ -46,16 +46,20 @@ const SlotPage = () => {
     const avgTime =
       completedTokens.length > 0
         ? completedTokens.reduce((acc, token) => {
+            if (!token.startedServiceTime || !token.endServiceTime) return acc;
             const diff = getTimeDifference(
-              token.startedServiceTime!,
-              token.endServiceTime!,
+              token.startedServiceTime,
+              token.endServiceTime,
             );
 
             const totalSeconds =
               diff.hours * 3600 + diff.minutes * 60 + diff.seconds;
 
             return acc + totalSeconds;
-          }, 0) / completedTokens.length
+          }, 0) /
+          completedTokens.filter(
+            (t) => t.startedServiceTime && t.endServiceTime,
+          ).length
         : 0;
 
     const progress =
@@ -67,7 +71,7 @@ const SlotPage = () => {
       totalBooked: slotToken.length,
       completed: completedTokens.length,
       remaining: slotToken.length - completedTokens.length,
-      avgTime,
+      avgTime: Math.round(avgTime),
       progress,
       slotToken,
     };

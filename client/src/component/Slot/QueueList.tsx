@@ -12,10 +12,7 @@ const QueueList = ({
       </div>
       <div>
         <p className="text-lg">Token #{slotNumber}</p>
-        <p className="text-[#3583d3]">
-          {status[0].toLocaleUpperCase()}
-          {status.slice(1)}
-        </p>
+        <p className="text-[`#3583d3`] capitalize">{status}</p>
       </div>
     </div>
   );

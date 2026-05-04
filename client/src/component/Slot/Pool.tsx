@@ -8,10 +8,9 @@ const Pool = ({ n, status }: { n: number; status: string }) => {
       <p className="text-2xl font-light">#{n}</p>
       <div className="flex gap-1 justify-center items-center">
         <p
-          className={`flex text-lg ${status === "completed" ? "text-green-500" : status === "in_progress" ? "text-[#9711FB]" : "text-gray-500"}`}
+          className={`flex text-lg capitalize ${status === "completed" ? "text-green-500" : status === "in_progress" ? "text-[#9711FB]" : "text-gray-500"}`}
         >
-          {status.replace("_", " ").slice(0, 1).toLocaleUpperCase() +
-            status.replace("_", " ").slice(1)}
+          {status.replace("_", " ")}
         </p>
         {status === "completed" ? (
           <CircleCheck size={20} />
