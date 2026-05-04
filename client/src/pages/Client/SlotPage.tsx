@@ -1,5 +1,4 @@
 import { slotsData, tokens } from "@/assets";
-import { colorBg } from "@/assets/export";
 import Details from "@/component/Slot/Details";
 import HeroSection from "@/component/Slot/HeroSection";
 import PoolList from "@/component/Slot/PoolList";
@@ -83,12 +82,7 @@ const SlotPage = () => {
   }
 
   return (
-    <div className="bg-black min-h-screen text-white relative">
-      <div
-        className="absolute inset-0 bg-position-[-100%_150%] bg-size-[1200px] bg-no-repeat z-20 left-0 top-0"
-        style={{ backgroundImage: `url("${colorBg}")` }}
-      />
-
+    <div className="bg-linear-to-br from-[#120736] via-[#000000] to-[#120736] min-h-screen text-white relative">
       {slot ? (
         <>
           <section className="z-20">
@@ -97,8 +91,13 @@ const SlotPage = () => {
               slotName={slot.slotName}
               startTime={slot.startTime}
               endTime={slot.endTime}
+              status={slot.status}
             />
-            <Details progress={stats.progress} />
+            <Details
+              progress={stats.progress}
+              completed={stats.completed}
+              total={stats.totalBooked}
+            />
             <PoolList />
           </section>
         </>

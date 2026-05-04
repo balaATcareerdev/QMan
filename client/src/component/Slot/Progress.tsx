@@ -1,20 +1,30 @@
-const Progress = ({ progress }: { progress: number }) => {
+import CircularProgress from "@/component/Slot/CircularRadial";
+import { Info } from "lucide-react";
+
+const Progress = ({
+  progress,
+  completed,
+  total,
+}: {
+  progress: number;
+  completed: number;
+  total: number;
+}) => {
   return (
-    <div className="bg-[#003CFF]/10 border border-[#6C6C6C] rounded-sm flex justify-center py-10">
-      <div className="w-3/4">
-        <h1 className="font-light text-2xl mb-20">Progress</h1>
+    <div className="p-10 bg-[#9711FB]/10 flex flex-col gap-4 justify-center rounded-2xl border border-[#2a1652]">
+      <h1 className="text-2xl">Progress</h1>
+      <section>
+        <CircularProgress value={progress} />
+      </section>
+      <hr className="border border-[#2a1652]" />
+      <div className="flex flex-col justify-center items-center">
+        <p className="font-thin text-gray-300">
+          {completed} of {total} completed
+        </p>
 
-        <div className="flex flex-col justify-center items-center">
-          <p className="font-light text-2xl pb-10">{progress}% Complete</p>
-
-          <div className="w-full h-9 bg-[#535353]/50 rounded-xl relative mb-20 overflow-hidden">
-            <div
-              className="absolute bg-[#9711FB] h-full rounded-xl transition-all duration-1000 ease-in-out"
-              style={{
-                width: `${progress}%`,
-              }}
-            ></div>
-          </div>
+        <div className="flex gap-1 px-2 py-3 bg-[#9f71fb]/5 rounded-sm border border-[#2a1652] mt-4">
+          <Info color="#9f71fb" />
+          <p className="text-[#9f71fb]">Keep going! You're doing great!</p>
         </div>
       </div>
     </div>

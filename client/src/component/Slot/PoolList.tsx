@@ -28,14 +28,14 @@ const PoolList = () => {
 
   return (
     <section className="relative px-20 z-30 pb-10">
-      <div className="max-w-3/4 bg-linear-to-r from-[#EACDFF]/10 to-[#8C7B99]/10 border border-[#423F3F] p-5 rounded-lg overflow-hidden">
-        <h1 className="font-light text-3xl">Tokens</h1>
+      <div className="w-full bg-[#9711FB]/10 border-[#451d70] border p-5 rounded-lg overflow-hidden">
+        <h1 className="text-2xl">Tokens</h1>
         {isLoading ? (
           <div className="flex justify-center items-center">
             <LoaderCircle className="animate-spin" size={40} />
           </div>
         ) : tokensData.length > 0 ? (
-          <div className="py-10 px-10 grid grid-cols-9 justify-start gap-10 items-end">
+          <div className="py-10 px-10 grid grid-cols-8 justify-start gap-10 items-end">
             {tokensData.map((token) => (
               <Pool key={token.id} n={token.slotNumber} status={token.status} />
             ))}
