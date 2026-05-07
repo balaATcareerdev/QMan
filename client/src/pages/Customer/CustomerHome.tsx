@@ -22,6 +22,7 @@ type ServiceWithMeta = {
   name: string;
   slotsLeft: number;
   bookingsLeft: number;
+  createdAt: string;
 };
 
 const CustomerHome = () => {
@@ -56,12 +57,24 @@ const CustomerHome = () => {
 
   const slotTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [selectedService, setSelectedService] = useState<{
+    serviceName: string;
+    date: string;
+  } | null>(null);
+
   const viewSlots = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     id: string,
   ) => {
     e.preventDefault();
     if (!showSlots) setShowSlots(true);
+    const service = services.find((s) => s.id === id);
+    if (service) {
+      setSelectedService({
+        serviceName: service.name,
+        date: service.createdAt,
+      });
+    }
 
     setIsSlotLoading(true);
 
@@ -150,6 +163,8 @@ const CustomerHome = () => {
           <div className="flex flex-col gap-10 mt-10">
             {services.map((service) => (
               <ServiceList
+                key={service.id}
+                date={service.createdAt}
                 onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
                   viewSlots(e, service.id)
                 }
@@ -170,12 +185,15 @@ const CustomerHome = () => {
         {showSlots && (
           <div className="outline outline-[#ff66b8]/20 p-5 rounded-md bg-[#fc76bd]/5">
             <h1 className="text-2xl">
-              Slots Available - <span className="text-[#FF1994]">Library</span>
+              Slots Available -{" "}
+              <span className="text-[#FF1994]">
+                {selectedService?.serviceName}
+              </span>
             </h1>
 
             <span className="text-[#797979] text-sm flex items-center gap-1">
               <ClockIcon size={12} />
-              11-4-2026
+              {} {new Date(selectedService?.date || "").toLocaleDateString()}
             </span>
 
             {isSlotLoading ? (
@@ -186,6 +204,7 @@ const CustomerHome = () => {
               <div className="flex flex-col gap-3">
                 {slots.map((slot) => (
                   <SlotList
+                    key={slot.id}
                     startingTime={slot.startTime}
                     endingTime={slot.endTime}
                   />

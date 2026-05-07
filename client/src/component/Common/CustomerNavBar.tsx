@@ -1,8 +1,10 @@
+import { user } from "@/assets/mockUser";
 import { Bell, HistoryIcon, HomeIcon, UserPen } from "lucide-react";
 import { Link, useLocation } from "react-router";
 
 const CustomerNavBar = () => {
   const location = useLocation();
+  const userData = user;
 
   return (
     <nav className="absolute grid grid-cols-3 w-full pb-2 text-white border-b border-[#525252] p-2 items-center justify-center">
@@ -11,21 +13,19 @@ const CustomerNavBar = () => {
         <div className="flex gap-2 items-center">
           <div>
             <div className="bg-[#a78fd7] w-15 h-15 rounded-full flex justify-center items-center cursor-pointer">
-              <p className="text-3xl">{"Balaji"[0]}</p>
+              <p className="text-3xl">{userData.name[0]}</p>
             </div>
           </div>
           <div>
-            <p className="text-lg">Balaji S</p>
+            <p className="text-lg">{userData.name}</p>
             <p className="font-light text-sm text-[#AAAAAA]">
-              balaji@example.com
+              {userData.email}
             </p>
           </div>
-          <div className="flex justify-center items-center px-1 py-2 rounded-md bg-gray-600/50 hover:bg-gray-600/70 cursor-pointer active:scale-105 transition duration-150">
-            <button className="text-[#b5b5b5] flex gap-1">
-              <UserPen color="#b5b5b5" />
-              Edit Profile
-            </button>
-          </div>
+          <button className="flex justify-center items-center px-1 py-2 rounded-md bg-gray-600/50 hover:bg-gray-600/70 cursor-pointer active:scale-105 transition duration-150 text-[`#b5b5b5`] gap-1">
+            <UserPen color="#b5b5b5" />
+            Edit Profile
+          </button>
         </div>
 
         {/* Photo Frame*/}

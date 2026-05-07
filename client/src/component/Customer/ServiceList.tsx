@@ -1,15 +1,12 @@
 import { Service_Icon } from "@/assets/export";
-import { Clock, RockingChairIcon } from "lucide-react";
-
-interface ServiceList {
-  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}
+import { Calendar, Clock, RockingChairIcon } from "lucide-react";
 
 interface ServiceListProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   serviceName: string;
   slotsLeft: number;
   bookingsLeft: number;
+  date: string;
 }
 
 const ServiceList = ({
@@ -17,6 +14,7 @@ const ServiceList = ({
   serviceName,
   slotsLeft,
   bookingsLeft,
+  date,
 }: ServiceListProps) => {
   return (
     <div className="grid grid-cols-[30%_1fr_30%] p-5 py-2.5 bg-linear-to-r from-[#a78fd7]/10 to-[#190b34]/20 outline rounded-sm hover:outline-[#FF1994] transition-all duration-300 outline-[#1c1c1c] cursor-pointer">
@@ -33,7 +31,12 @@ const ServiceList = ({
         </div>
         <div>
           <h1 className="text-lg line-clamp-1">{serviceName}</h1>
-          <p className="text-sm text-[#A09999]">11-4-2026</p>
+          <div className="flex items-center gap-1">
+            <Calendar size={12} />
+            <p className="text-sm text-[#A09999]">
+              {new Date(date).toLocaleDateString()}
+            </p>
+          </div>
         </div>
       </div>
 

@@ -18,6 +18,7 @@ const getServicesWithMeta = () => {
       name: service.name,
       slotsLeft,
       bookingsLeft,
+      createdAt: service.createdAt,
     };
   });
 };
