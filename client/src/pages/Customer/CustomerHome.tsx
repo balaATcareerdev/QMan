@@ -207,6 +207,7 @@ const CustomerHome = () => {
                     key={slot.id}
                     startingTime={slot.startTime}
                     endingTime={slot.endTime}
+                    click={() => {}}
                   />
                 ))}
               </div>
