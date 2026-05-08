@@ -30,3 +30,16 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
+
+/* Chrome, Safari */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}

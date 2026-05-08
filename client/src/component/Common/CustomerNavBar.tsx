@@ -1,5 +1,11 @@
 import { user } from "@/assets/mockUser";
-import { Bell, HistoryIcon, HomeIcon, UserPen } from "lucide-react";
+import {
+  Bell,
+  BookOpenCheckIcon,
+  HistoryIcon,
+  HomeIcon,
+  UserPen,
+} from "lucide-react";
 import { Link, useLocation } from "react-router";
 
 const CustomerNavBar = () => {
@@ -32,7 +38,7 @@ const CustomerNavBar = () => {
       </div>
 
       {/* Menu */}
-      <div className="flex text-2xl justify-around items-start">
+      <div className="flex text-xl justify-around items-start">
         <div
           className={`flex justify-center px-1 py-2 items-center ${location.pathname === "/cust" ? "text-[#f46ea0] bg-[#f46ea0]/10  rounded-sm border-b border-[#f46ea0]" : ""}`}
         >
@@ -40,7 +46,7 @@ const CustomerNavBar = () => {
             to={"/cust"}
             className="cursor-pointer flex items-center gap-1 justify-center"
           >
-            <HomeIcon />
+            <HomeIcon size={20} />
             Home
           </Link>
         </div>
@@ -49,10 +55,22 @@ const CustomerNavBar = () => {
           className={`flex justify-center px-1 py-2 items-center ${location.pathname === "/cust/booked" ? "text-[#f46ea0] bg-[#f46ea0]/10  rounded-sm border-b border-[#f46ea0]" : ""}`}
         >
           <Link
+            to={"/cust/booked"}
+            className="cursor-pointer flex items-center gap-1 justify-center"
+          >
+            <BookOpenCheckIcon size={20} />
+            Booked
+          </Link>
+        </div>
+
+        <div
+          className={`flex justify-center px-1 py-2 items-center ${location.pathname === "/cust/history" ? "text-[#f46ea0] bg-[#f46ea0]/10  rounded-sm border-b border-[#f46ea0]" : ""}`}
+        >
+          <Link
             to={"#"}
             className="cursor-pointer flex items-center gap-1 justify-center"
           >
-            <HistoryIcon />
+            <HistoryIcon size={20} />
             History
           </Link>
         </div>
@@ -64,7 +82,7 @@ const CustomerNavBar = () => {
             to={"#"}
             className="cursor-pointer flex items-center gap-1 justify-center relative"
           >
-            <Bell />
+            <Bell size={20} />
             Notification
             <div className="absolute -top-2 -right-5 bg-[#f46ea0] rounded-full">
               <p className="w-5 h-5 flex items-center justify-center text-xs">

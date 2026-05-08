@@ -1,22 +1,22 @@
 import { getFormattedTime } from "@/util/slotUtils";
-import { useNavigate } from "react-router";
 
 const SlotList = ({
   startingTime,
   endingTime,
+  click,
 }: {
   startingTime: string;
   endingTime: string;
+  click: () => void;
 }) => {
-  const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center">
       <p>
         {getFormattedTime(startingTime)} - {getFormattedTime(endingTime)}
       </p>
       <button
-        onClick={() => navigate("booked")}
-        className="bg-linear-to-t from-[#C275FB] to-[#6D9DFC] text-lg rounded-sm px-2.5 py-1"
+        onClick={click}
+        className="bg-linear-to-t from-[#C275FB] to-[#6D9DFC] active:from-[#C275FB]/50 active:to-[#6D9DFC]/50 text-lg rounded-sm px-2.5 py-1 transition-colors duration-200 ease-in-out"
       >
         Book
       </button>

@@ -68,7 +68,7 @@ const ServiceList = ({
       <div className="flex justify-center items-center text-sm">
         <button
           onClick={onClick}
-          className="bg-linear-to-r from-[#BC6B96] hover:from-[#BC6B96]/50 to-[#737F97] hover:to-[#737F97]/50 px-4 py-2 rounded-sm"
+          className="bg-linear-to-r from-[#BC6B96] active:from-[#BC6B96]/50 to-[#737F97] active:to-[#737F97]/50 px-4 py-2 rounded-sm"
         >
           View Details
         </button>
