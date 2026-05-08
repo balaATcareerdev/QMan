@@ -15,6 +15,12 @@ const Booked = () => {
     history: [],
   });
 
+  const displayDate = new Intl.DateTimeFormat("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  }).format(new Date());
+
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchUserBookings().then((bookings) => {
@@ -34,7 +40,7 @@ const Booked = () => {
         <div className="flex">
           <div className="bg-gray-400/15 flex items-center gap-1 p-2 rounded-sm border-[#303030] border">
             <Calendar size={20} />
-            <span className="text-xl font-light">11-04-2026</span>
+            <span className="text-xl font-light">{displayDate}</span>
           </div>
         </div>
       </div>

@@ -54,8 +54,8 @@ const ColumnSlot = ({
       </section>
       <section className="bg-[#ffffff]/7 border border-[#ffffff]/15 rounded-sm">
         <div className="p-2">
-          <span>
-            Active{" "}
+          <span className="capitalize">
+            {title}{" "}
             <span
               style={{
                 color: hexToRgba(color, 1),
