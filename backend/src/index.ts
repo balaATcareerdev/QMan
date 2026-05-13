@@ -1,7 +1,7 @@
+import "dotenv/config";
 import app from "./server.js";
 import cors from "cors";
 import express from "express";
-import "dotenv/config";
 import cookieParser from "cookie-parser";
 
 const PORT = process.env.PORT || 3000;
