@@ -8,10 +8,8 @@ import {
 import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 import type { Request, Response } from "express";
-import { success } from "zod";
 
 export const register = async (req: Request, res: Response) => {
-  console.log("Received registration request with body:", req.body);
   const parsed = createUserSchema.safeParse(req.body);
 
   if (!parsed.success) {
@@ -27,7 +25,7 @@ export const register = async (req: Request, res: Response) => {
     });
 
     if (existingUser) {
-      return res.status(400).json({ error: "Email already in use" });
+      return res.status(409).json({ error: "Email already in use" });
     }
 
     const hashedPassword = await bcrypt.hash(parsed.data.password, 10);
@@ -60,8 +58,17 @@ export const register = async (req: Request, res: Response) => {
         role: user.role,
       },
     });
-  } catch (error) {
-    return res.status(500).json({ error });
+  } catch (error: any) {
+    // Handle race condition: unique constraint violation
+    // PostgreSQL duplicate key error code = 23505
+    if (error?.code === "23505") {
+      return res.status(409).json({
+        error: "Email already in use",
+      });
+    }
+
+    console.error("Register error:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 

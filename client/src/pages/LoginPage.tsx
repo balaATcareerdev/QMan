@@ -51,8 +51,7 @@ const LoginPage = () => {
 
   const { mutateAsync: doLogin } = useMutation({
     mutationFn: userLogin,
-    onSuccess: async (data) => {
-      console.log("Login successful:", data);
+    onSuccess: async () => {
       await refreshAuth();
       navigate("/");
     },
@@ -82,7 +81,7 @@ const LoginPage = () => {
         });
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Authentication error:", error);
     }
   };
 

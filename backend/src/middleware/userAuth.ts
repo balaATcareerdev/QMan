@@ -12,8 +12,6 @@ export const userAuth = async (
 ) => {
   const { token } = req.cookies;
 
-  console.log("Received token from cookies:", token);
-
   if (!token) {
     return res
       .status(401)

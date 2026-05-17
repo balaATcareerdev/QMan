@@ -10,10 +10,11 @@ const HomeRedirect = () => {
 
   console.log(user + " From Redirect");
 
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/login" replace />;
 
   if (user.role === "Client") return <Navigate to="/client" replace />;
-  return <Navigate to="/cust" replace />;
+  if (user.role === "Customer") return <Navigate to="/cust" replace />;
+  return <Navigate to="/unauthorized" replace />;
 };
 
 export default HomeRedirect;
