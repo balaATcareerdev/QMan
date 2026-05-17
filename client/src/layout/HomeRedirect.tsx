@@ -1,11 +1,20 @@
-import { user } from "@/assets/mockUser";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { Navigate } from "react-router";
 
 const HomeRedirect = () => {
-  if (!user) return <Navigate to="/login" />;
+  const { user, isLoading } = useAuthContext();
 
-  if (user.role === "Client") return <Navigate to="/client" />;
-  return <Navigate to="/cust" />;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log(user + " From Redirect");
+
+  if (!user) return <Navigate to="/login" replace />;
+
+  if (user.role === "Client") return <Navigate to="/client" replace />;
+  if (user.role === "Customer") return <Navigate to="/cust" replace />;
+  return <Navigate to="/unauthorized" replace />;
 };
 
 export default HomeRedirect;
