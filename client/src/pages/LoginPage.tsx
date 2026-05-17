@@ -208,7 +208,7 @@ const LoginPage = () => {
                   <label className="flex items-center justify-center gap-1">
                     <input
                       type="radio"
-                      value={"Client"}
+                      value={"Customer"}
                       className="accent-[#9711FB]"
                       {...register("role")}
                     />
