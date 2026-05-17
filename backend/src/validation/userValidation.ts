@@ -5,10 +5,11 @@ export const idSchema = z.object({
 });
 
 export const createUserSchema = z.object({
-  name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
   role: z.enum(["Client", "Customer"]).default("Customer"),
+  fname: z.string().min(1, "First name is required"),
+  lname: z.string().min(1, "Last name is required"),
 });
 
 export const verifyExistingUserSchema = z.object({

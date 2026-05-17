@@ -53,9 +53,10 @@ export const register = async (req: Request, res: Response) => {
     return res.status(201).json({
       user: {
         id: user.id,
-        name: user.name,
         email: user.email,
         role: user.role,
+        fname: user.fname,
+        lname: user.lname,
       },
     });
   } catch (error: any) {
@@ -115,9 +116,10 @@ export const login = async (req: Request, res: Response) => {
       message: "Login successful",
       user: {
         id: existingUser.id,
-        name: existingUser.name,
         email: existingUser.email,
         role: existingUser.role,
+        fname: existingUser.fname,
+        lname: existingUser.lname,
       },
     });
   } catch (error) {
@@ -162,9 +164,10 @@ export const isAuth = async (req: Request, res: Response) => {
       success: true,
       user: {
         id: user.id,
-        name: user.name,
         email: user.email,
         role: user.role,
+        fname: user.fname,
+        lname: user.lname,
       },
     });
   } catch (error) {

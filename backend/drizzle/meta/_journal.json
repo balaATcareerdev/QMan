@@ -15,6 +15,20 @@
       "when": 1778701857503,
       "tag": "0001_sour_inertia",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779040513797,
+      "tag": "0002_spotty_red_wolf",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779040621733,
+      "tag": "0003_flawless_rictor",
+      "breakpoints": true
     }
   ]
 }
