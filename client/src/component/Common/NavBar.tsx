@@ -1,23 +1,65 @@
 import { user } from "@/assets/mockUser";
+import { userLogout } from "@/auth/userAuth";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useMutation } from "@tanstack/react-query";
 import {
   BadgeIndianRupee,
   Bell,
   History,
   House,
   LayoutDashboard,
+  LogOut,
+  UserPen,
 } from "lucide-react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
 const NavBar = () => {
   const userData = user;
   const location = useLocation();
+  const { refreshAuth } = useAuthContext();
+  const navigate = useNavigate();
+
+  const { mutateAsync: doLogout, isPending: isLoggingOut } = useMutation({
+    mutationFn: userLogout,
+    onSuccess: async () => {
+      try {
+        await refreshAuth();
+      } finally {
+        navigate("/login");
+      }
+    },
+  });
+
+  const onLogout = async () => {
+    try {
+      await doLogout();
+    } catch (error) {
+      console.log("Logout failed:", error);
+    }
+  };
 
   return (
     <nav className="absolute z-30 w-full flex p-2 text-white bg-black/50 border-b border-gray-800">
       <div className="w-1/3">
-        <div className="flex flex-col">
-          <span className="text-lg">{userData.name}</span>
-          <span className="text-sm text-gray-400">{userData.email}</span>
+        <div className="flex justify-start items-center gap-2">
+          <div className="flex flex-col">
+            <span className="text-lg">{userData.name}</span>
+            <span className="text-sm text-gray-400">{userData.email}</span>
+          </div>
+
+          <button className="flex justify-center items-center px-1 py-2 rounded-md bg-gray-600/50 hover:bg-gray-600/70 cursor-pointer active:scale-105 transition duration-150 text-[`#b5b5b5`] gap-1">
+            <UserPen size={16} color="#b5b5b5" />
+            Edit Profile
+          </button>
+
+          <button
+            className="flex justify-center items-center px-1 py-2 rounded-md bg-gray-600/50 hover:bg-gray-600/70 cursor-pointer active:scale-105 transition duration-150 text-[`#b5b5b5`] gap-1"
+            onClick={onLogout}
+            disabled={isLoggingOut}
+          >
+            <LogOut size={16} color="#b5b5b5" />
+            Logout
+          </button>
         </div>
       </div>
       <div className="w-1/3 text-xl flex justify-center items-center gap-6">

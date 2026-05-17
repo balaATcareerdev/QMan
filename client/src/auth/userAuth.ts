@@ -14,3 +14,8 @@ export const userAuth = async () => {
   const response = await api.get("/auth/is-auth");
   return response.data.user;
 };
+
+export const userLogout = async () => {
+  const response = await api.post("/auth/logout");
+  return response.data;
+};

@@ -1,16 +1,42 @@
 import { user } from "@/assets/mockUser";
+import { userLogout } from "@/auth/userAuth";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useMutation } from "@tanstack/react-query";
 import {
   Bell,
   BookOpenCheckIcon,
   HistoryIcon,
   HomeIcon,
+  LogOut,
   UserPen,
 } from "lucide-react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
 const CustomerNavBar = () => {
   const location = useLocation();
   const userData = user;
+  const navigate = useNavigate();
+
+  const { refreshAuth } = useAuthContext();
+
+  const { mutateAsync: doLogout, isPending: isLoggingOut } = useMutation({
+    mutationFn: userLogout,
+    onSuccess: async () => {
+      try {
+        await refreshAuth();
+      } finally {
+        navigate("/login");
+      }
+    },
+  });
+
+  const onLogout = async () => {
+    try {
+      await doLogout();
+    } catch (error) {
+      console.log("Logout failed:", error);
+    }
+  };
 
   return (
     <nav className="absolute grid grid-cols-3 w-full pb-2 text-white border-b border-[#525252] p-2 items-center justify-center">
@@ -93,8 +119,17 @@ const CustomerNavBar = () => {
         </div>
       </div>
 
-      {/* MT */}
-      <div></div>
+      {/* Logout */}
+      <div className="flex justify-end items-center">
+        <button
+          className="flex justify-center items-center px-1 py-2 rounded-md bg-gray-600/50 hover:bg-gray-600/70 cursor-pointer active:scale-105 transition duration-150 text-[`#b5b5b5`] gap-1"
+          onClick={onLogout}
+          disabled={isLoggingOut}
+        >
+          <LogOut size={16} color="#b5b5b5" />
+          Logout
+        </button>
+      </div>
     </nav>
   );
 };
