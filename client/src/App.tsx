@@ -10,10 +10,17 @@ import CustomerLayout from "@/layout/CustomerLayout";
 import ClientLayout from "@/layout/ClientLayout";
 import HomeRedirect from "@/layout/HomeRedirect";
 import NotFound from "@/pages/NotFound";
-import ProtectedRoute from "@/component/ProtectRoute/ProtectedRoute";
+import ProtectedRoute from "@/auth/ProtectedRoute";
 import UnAuthorized from "@/pages/UnAuthorized";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const App = () => {
+  const { isLoading } = useAuthContext();
+
+  if (isLoading) {
+    return <div>Authentication Processing...</div>;
+  }
+
   return (
     <div className="relative">
       <Routes>

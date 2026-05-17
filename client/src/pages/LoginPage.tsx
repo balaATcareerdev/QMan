@@ -1,6 +1,8 @@
 import { loginBg } from "@/assets/export";
-import { user } from "@/assets/mockUser";
+import { userLogin } from "@/auth/userAuth";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import {
   CircleAlert,
   KeyRound,
@@ -34,33 +36,53 @@ type formField = loginFormType | registerFormType;
 
 const LoginPage = () => {
   const [type, setType] = useState<"login" | "register">("login");
+  const { refreshAuth } = useAuthContext();
 
   const navigate = useNavigate();
   const schema = type === "register" ? registerSchema : loginSchema;
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<formField>({
     shouldUnregister: true,
     resolver: zodResolver(schema),
   });
 
+  const { mutateAsync: doLogin } = useMutation({
+    mutationFn: userLogin,
+    onSuccess: async (data) => {
+      console.log("Login successful:", data);
+      await refreshAuth();
+      navigate("/");
+    },
+  });
+
   const onSubmit: SubmitHandler<formField> = async (data) => {
+    // try {
+    //   await new Promise((resolve) => setTimeout(resolve, 2000));
+    //   // throw new Error("This Email is already in use");
+    //   if (user.role === "Customer") {
+    //     navigate("/cust");
+    //   } else if (user.role === "Client") {
+    //     navigate("/client");
+    //   } else {
+    //     navigate("/unauthorized");
+    //   }
+    //   console.log(data);
+    // } catch (error) {
+    //   setError("root", { message: (error as Error).message });
+    // }
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      // throw new Error("This Email is already in use");
-      if (user.role === "Customer") {
-        navigate("/cust");
-      } else if (user.role === "Client") {
-        navigate("/client");
-      } else {
-        navigate("/unauthorized");
+      if (type === "login") {
+        await doLogin({
+          email: data.email,
+          password: data.password,
+        });
       }
-      console.log(data);
     } catch (error) {
-      setError("root", { message: (error as Error).message });
+      console.error("Login error:", error);
     }
   };
 

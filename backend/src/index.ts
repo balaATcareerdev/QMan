@@ -1,22 +1,25 @@
 import "dotenv/config";
 import app from "./server.js";
-import cors from "cors";
-import express from "express";
-import cookieParser from "cookie-parser";
 
 const PORT = process.env.PORT || 3000;
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  }),
-);
+console.log("Starting server...");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+const server = app.listen(PORT, () => {
+  console.log(`✓ Server is running on port ${PORT}`);
+});
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+server.on("error", (error) => {
+  console.error("Server error:", error);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+  process.exit(1);
+});
+
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught Exception:", error);
+  process.exit(1);
 });
