@@ -1,5 +1,5 @@
 import { loginBg } from "@/assets/export";
-import { userLogin } from "@/auth/userAuth";
+import { userLogin, userRegister } from "@/auth/userAuth";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -25,6 +25,9 @@ const baseSchema = z.object({
 const registerSchema = baseSchema.extend({
   fname: z.string().min(1, "First name is required"),
   lname: z.string().min(1, "Last name is required"),
+  role: z.enum(["Customer", "Client"], {
+    message: "Role must be either 'Customer' or 'Client'",
+  }),
 });
 
 const loginSchema = baseSchema;
@@ -35,7 +38,7 @@ type registerFormType = z.infer<typeof registerSchema>;
 type formField = loginFormType | registerFormType;
 
 const LoginPage = () => {
-  const [type, setType] = useState<"login" | "register">("login");
+  const [type, setType] = useState<"login" | "register">("register");
   const { refreshAuth, user, isLoading } = useAuthContext();
 
   const navigate = useNavigate();
@@ -51,6 +54,14 @@ const LoginPage = () => {
 
   const { mutateAsync: doLogin } = useMutation({
     mutationFn: userLogin,
+    onSuccess: async () => {
+      await refreshAuth();
+      navigate("/");
+    },
+  });
+
+  const { mutateAsync: doRegister } = useMutation({
+    mutationFn: userRegister,
     onSuccess: async () => {
       await refreshAuth();
       navigate("/");
@@ -78,6 +89,17 @@ const LoginPage = () => {
         await doLogin({
           email: data.email,
           password: data.password,
+        });
+      }
+      if (type === "register") {
+        console.log(data);
+        const registerData = data as registerFormType;
+        await doRegister({
+          email: registerData.email,
+          password: registerData.password,
+          fname: registerData.fname,
+          lname: registerData.lname,
+          role: registerData.role,
         });
       }
     } catch (error) {
@@ -164,6 +186,34 @@ const LoginPage = () => {
                       </div>
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+
+            {type === "register" && (
+              <div className="flex items-center justify-start pt-5 gap-5 px-2">
+                <p className="text-[#9711FB]">Role:</p>
+
+                <div className="flex justify-center items-center gap-5">
+                  <label className="flex items-center justify-center gap-1">
+                    <input
+                      type="radio"
+                      value={"Client"}
+                      className="accent-[#9711FB]"
+                      {...register("role")}
+                    />
+                    <span className="text-sm">Client</span>
+                  </label>
+
+                  <label className="flex items-center justify-center gap-1">
+                    <input
+                      type="radio"
+                      value={"Client"}
+                      className="accent-[#9711FB]"
+                      {...register("role")}
+                    />
+                    <span className="text-sm">Customer</span>
+                  </label>
                 </div>
               </div>
             )}
