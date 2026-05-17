@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { z } from "zod";
 
 const baseSchema = z.object({
@@ -36,7 +36,7 @@ type formField = loginFormType | registerFormType;
 
 const LoginPage = () => {
   const [type, setType] = useState<"login" | "register">("login");
-  const { refreshAuth } = useAuthContext();
+  const { refreshAuth, user, isLoading } = useAuthContext();
 
   const navigate = useNavigate();
   const schema = type === "register" ? registerSchema : loginSchema;
@@ -84,6 +84,10 @@ const LoginPage = () => {
       console.error("Authentication error:", error);
     }
   };
+
+  if (!isLoading && user) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="bg-linear-to-b from-black to-[#140B1B] min-h-screen text-white flex justify-center items-center">
