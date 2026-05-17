@@ -22,8 +22,11 @@ const CustomerNavBar = () => {
   const { mutateAsync: doLogout, isPending: isLoggingOut } = useMutation({
     mutationFn: userLogout,
     onSuccess: async () => {
-      await refreshAuth();
-      navigate("/login");
+      try {
+        await refreshAuth();
+      } finally {
+        navigate("/login");
+      }
     },
   });
 
