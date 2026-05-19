@@ -1,18 +1,18 @@
+import type { ActiveService } from "@/auth/serviceApi";
 import PrimaryGradHome from "@/component/Buttons/PrimaryGradHome";
 import SecondaryGradHome from "@/component/Buttons/SecondaryGradHome";
-import type { ServiceType } from "@/types/types";
 import { Calendar1, ClockArrowUp } from "lucide-react";
 
 const UpcomingService = ({
   service,
-  slotCount,
   setOpenEdit,
   setSelectedService,
 }: {
-  service: ServiceType;
-  slotCount: { totalSlots: number };
+  service: ActiveService;
   setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedService: React.Dispatch<React.SetStateAction<ServiceType | null>>;
+  setSelectedService: React.Dispatch<
+    React.SetStateAction<ActiveService | null>
+  >;
 }) => {
   return (
     <div className="text-white grid grid-cols-[10%_60%_15%_1fr] min-w-360 w-full bg-[#0e0e1f] p-5 rounded-3xl">
@@ -23,7 +23,7 @@ const UpcomingService = ({
       </div>
 
       <div className="flex flex-col gap-2 p-2">
-        <h1 className="text-2xl font-medium">{service.name}</h1>
+        <h1 className="text-2xl font-medium">{service.serviceName}</h1>
         <p className="text-lg font-light text-[#BDBDBD] line-clamp-2">
           {service.description}
         </p>
@@ -31,7 +31,7 @@ const UpcomingService = ({
         <div className="flex justify-start items-end gap-2">
           <Calendar1 />
           <span className="text-sm text-gray-500">
-            {new Date(service.createdAt)
+            {new Date(service.date)
               .toLocaleDateString()
               .toString()
               .replaceAll("/", "-")}
@@ -41,9 +41,9 @@ const UpcomingService = ({
 
       <div className="flex flex-col justify-center items-center">
         <span
-          className={`text-lg ${slotCount.totalSlots > 0 ? "" : "text-orange-600"}`}
+          className={`text-lg ${service.totalSlots > 0 ? "" : "text-orange-600"}`}
         >
-          {slotCount.totalSlots} Slots Available
+          {service.totalSlots} Slots Available
         </span>
       </div>
 

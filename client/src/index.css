@@ -43,3 +43,30 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+@keyframes barBounce {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.animate-bar1 {
+  animation: barBounce 0.8s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.animate-bar2 {
+  animation: barBounce 0.8s ease-in-out infinite;
+  animation-delay: 0.15s;
+}
+
+.animate-bar3 {
+  animation: barBounce 0.8s ease-in-out infinite;
+  animation-delay: 0.3s;
+}

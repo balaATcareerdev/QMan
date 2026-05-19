@@ -1,18 +1,8 @@
-import type { ServiceType } from "@/types/types";
+import type { ActiveService } from "@/auth/serviceApi";
 import { Activity, Calendar1 } from "lucide-react";
 import { useNavigate } from "react-router";
 
-const ServiceCard = ({
-  service,
-  avgTimePerService,
-}: {
-  service: ServiceType;
-  avgTimePerService: {
-    serviceId: string;
-    Avg: number;
-    totalSlots: number;
-  };
-}) => {
+const ServiceCard = ({ service }: { service: ActiveService }) => {
   const navigate = useNavigate();
 
   return (
@@ -24,7 +14,7 @@ const ServiceCard = ({
       </div>
 
       <div className="flex flex-col gap-2 p-2">
-        <h1 className="text-2xl font-medium">{service.name}</h1>
+        <h1 className="text-2xl font-medium">{service.serviceName}</h1>
         <p className="text-lg font-light text-[#BDBDBD] line-clamp-2">
           {service.description}
         </p>
@@ -32,7 +22,7 @@ const ServiceCard = ({
         <div className="flex justify-start items-end gap-2">
           <Calendar1 />
           <span className="text-sm text-gray-500">
-            {new Date(service.createdAt)
+            {new Date(service.date)
               .toLocaleDateString()
               .toString()
               .replaceAll("/", "-")}
@@ -42,9 +32,9 @@ const ServiceCard = ({
 
       <div className="flex flex-col justify-center items-center">
         <span className="text-[#00FF0D] text-lg font-light">
-          {avgTimePerService.totalSlots} Active Slots
+          {service.activeSlots} Active Slots
         </span>
-        <span className="text-lg">{avgTimePerService.Avg} Sec/Person</span>
+        <span className="text-lg">{service.avgSecPerPerson} Sec/Person</span>
       </div>
 
       <div className="flex justify-center items-center">

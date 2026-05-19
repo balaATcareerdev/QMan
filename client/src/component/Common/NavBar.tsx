@@ -1,4 +1,3 @@
-import { user } from "@/assets/mockUser";
 import { userLogout } from "@/auth/userAuth";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useMutation } from "@tanstack/react-query";
@@ -14,9 +13,8 @@ import {
 import { Link, useLocation, useNavigate } from "react-router";
 
 const NavBar = () => {
-  const userData = user;
   const location = useLocation();
-  const { refreshAuth } = useAuthContext();
+  const { refreshAuth, user: userData } = useAuthContext();
   const navigate = useNavigate();
 
   const { mutateAsync: doLogout, isPending: isLoggingOut } = useMutation({
@@ -38,12 +36,14 @@ const NavBar = () => {
     }
   };
 
+  if (!userData) return null;
+
   return (
     <nav className="absolute z-30 w-full flex p-2 text-white bg-black/50 border-b border-gray-800">
       <div className="w-1/3">
         <div className="flex justify-start items-center gap-2">
           <div className="flex flex-col">
-            <span className="text-lg">{userData.name}</span>
+            <span className="text-lg">{userData.fname}</span>
             <span className="text-sm text-gray-400">{userData.email}</span>
           </div>
 
@@ -135,7 +135,7 @@ const NavBar = () => {
           </p>
         </div>
         <div className="w-10 h-10 bg-[#9711FB] text-center flex justify-center flex-col rounded-full">
-          {userData.name[0]}
+          {userData.fname[0]}
         </div>
       </div>
     </nav>
