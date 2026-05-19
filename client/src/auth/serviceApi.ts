@@ -19,6 +19,16 @@ export interface ActiveService {
   totalSlots: number;
 }
 
+export interface ResponseService {
+  id: string;
+  serviceName: string;
+  description: string;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+  isPaused: boolean;
+}
+
 interface GetActiveServicesResponse {
   success: boolean;
   message: string;
@@ -53,5 +63,10 @@ export const getServiceStats = async () => {
 export const getUpcomingServices = async () => {
   const response =
     await api.get<GetActiveServicesResponse>("/service/upcoming");
+  return response.data;
+};
+
+export const startService = async (serviceId: string) => {
+  const response = await api.post(`/service/start/${serviceId}`);
   return response.data;
 };

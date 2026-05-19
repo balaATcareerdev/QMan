@@ -235,3 +235,44 @@ export const getServiceStats = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const startService = async (req: Request, res: Response) => {
+  const userId = req.userId;
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+  const serviceId = req.params.serviceId as string;
+  if (!serviceId) {
+    return res.status(400).json({ error: "Service ID is required" });
+  }
+
+  try {
+    const [updatedService] = await db
+      .update(serviceSchema)
+      .set({
+        date: new Date(),
+      })
+      .where(
+        and(
+          eq(serviceSchema.id, serviceId),
+          eq(serviceSchema.createdBy, userId),
+        ),
+      )
+      .returning();
+
+    if (!updatedService) {
+      return res
+        .status(404)
+        .json({ error: "Service not found or not authorized" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Service started",
+      service: updatedService,
+    });
+  } catch (error) {
+    console.error("Error starting service:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
