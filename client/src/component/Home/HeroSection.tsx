@@ -1,43 +1,30 @@
 // import { colorBg } from "@/assets/export";
 import { home_Bell } from "@/assets/export";
+import { getServiceStats } from "@/auth/serviceApi";
 import PrimaryPurp from "@/component/Buttons/PrimaryPurp";
 import SecondaryPurp from "@/component/Buttons/SecondaryPurp";
 import BubbleDisplay from "@/component/Common/BubbleDisplay";
 import CreateServiceModal from "@/component/Modals/CreateServiceModal";
-import {
-  BetweenHorizonalEnd,
-  Briefcase,
-  Clock,
-  LoaderCircle,
-  Zap,
-} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { BetweenHorizonalEnd, Briefcase, Clock, Zap } from "lucide-react";
 import { useState } from "react";
 
-interface HeroSectionProps {
-  activeService: number;
-  avgTime: number;
-  availableSlots: number;
-  isLoading: boolean;
-}
-
-const HeroSection = ({
-  activeService,
-  avgTime,
-  availableSlots,
-  isLoading,
-}: HeroSectionProps) => {
+const HeroSection = () => {
   const [openCreate, setOpenCreate] = useState<boolean>(false);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center">
-        <LoaderCircle className="animate-spin" size={40} color="white" />
-      </div>
-    );
-  }
+  const { data: serviceStats, isLoading: isStatsLoading } = useQuery({
+    queryKey: ["service_stats"],
+    queryFn: async () => {
+      const response = await getServiceStats();
+      if (response.success) {
+        console.log(response.stats);
+      }
+      return response.stats;
+    },
+  });
 
   return (
-    <section className="relative w-full overflow-hidden text-white pt-30 px-20">
+    <section className="relative w-full overflow-hidden text-white px-20">
       <div className="grid grid-cols-2">
         <div className="text-5xl font-bold gap-2 flex flex-col">
           <h1 className="text-white">Book Your Service</h1>
@@ -68,25 +55,36 @@ const HeroSection = ({
       </div>
 
       {/* Stats */}
+
       <div className="flex justify-center items-center gap-10 mt-15">
-        <BubbleDisplay
-          head="Active Service"
-          value={activeService.toString()}
-          desc={"Currently Running"}
-          Icon={Briefcase}
-        />
-        <BubbleDisplay
-          head="Avg Time Sec"
-          value={avgTime.toString()}
-          desc="Per Person"
-          Icon={Clock}
-        />
-        <BubbleDisplay
-          head="Available Slots"
-          value={availableSlots.toString()}
-          desc="For Booking"
-          Icon={BetweenHorizonalEnd}
-        />
+        {isStatsLoading ? (
+          <div className="flex items-end gap-2 h-10">
+            <span className="w-2 h-4 bg-[#b549dd] rounded-full animate-bar1" />
+            <span className="w-2 h-8 bg-[#b549dd] rounded-full animate-bar2" />
+            <span className="w-2 h-6 bg-[#b549dd] rounded-full animate-bar3" />
+          </div>
+        ) : (
+          <>
+            <BubbleDisplay
+              head="Active Service"
+              value={serviceStats?.activeService.toString() ?? "0"}
+              desc={"Currently Running"}
+              Icon={Briefcase}
+            />
+            <BubbleDisplay
+              head="Avg Time Sec"
+              value={serviceStats?.avgTime.toString() ?? "0"}
+              desc="Per Person"
+              Icon={Clock}
+            />
+            <BubbleDisplay
+              head="Available Slots"
+              value={serviceStats?.availableSlots.toString() ?? "0"}
+              desc="For Booking"
+              Icon={BetweenHorizonalEnd}
+            />
+          </>
+        )}
       </div>
 
       <CreateServiceModal

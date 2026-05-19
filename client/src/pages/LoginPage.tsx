@@ -3,6 +3,7 @@ import { userLogin, userRegister } from "@/auth/userAuth";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 import {
   CircleAlert,
   KeyRound,
@@ -13,6 +14,7 @@ import {
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Navigate, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 const baseSchema = z.object({
@@ -38,7 +40,7 @@ type registerFormType = z.infer<typeof registerSchema>;
 type formField = loginFormType | registerFormType;
 
 const LoginPage = () => {
-  const [type, setType] = useState<"login" | "register">("register");
+  const [type, setType] = useState<"login" | "register">("login");
   const { refreshAuth, user, isLoading } = useAuthContext();
 
   const navigate = useNavigate();
@@ -54,17 +56,25 @@ const LoginPage = () => {
 
   const { mutateAsync: doLogin } = useMutation({
     mutationFn: userLogin,
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await refreshAuth();
       navigate("/");
+      toast.success(data.message);
+    },
+    onError: (error: AxiosError<{ error: string }>) => {
+      toast.error(error.response?.data?.error || "Login failed");
     },
   });
 
   const { mutateAsync: doRegister } = useMutation({
     mutationFn: userRegister,
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await refreshAuth();
       navigate("/");
+      toast.success(data.message);
+    },
+    onError: (error: AxiosError<{ error: string }>) => {
+      toast.error(error.response?.data?.error || "Registration failed");
     },
   });
 

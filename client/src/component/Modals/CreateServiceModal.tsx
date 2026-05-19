@@ -1,7 +1,10 @@
+import { createService } from "@/auth/serviceApi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LoaderCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
 import z from "zod";
 
 const schema = z.object({
@@ -26,7 +29,8 @@ const CreateServiceModal = ({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    reset,
+    formState: { errors },
   } = useForm<formDataType>({
     resolver: zodResolver(schema),
   });
@@ -48,8 +52,30 @@ const CreateServiceModal = ({
     onClose();
   };
 
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: newService, isPending } = useMutation({
+    mutationFn: createService,
+    onSuccess: () => {
+      handleClose();
+      toast.success("Service created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["active_services"] });
+      queryClient.invalidateQueries({ queryKey: ["upcoming_services"] });
+      queryClient.invalidateQueries({ queryKey: ["service_stats"] });
+    },
+  });
+
   const submitForm: SubmitHandler<formDataType> = async (data) => {
-    console.log(data);
+    try {
+      await newService({
+        serviceName: data.serviceName,
+        description: data.serviceDescription,
+        date: new Date(data.serviceDate).toISOString(),
+      });
+    } catch (error) {
+      console.error("Error creating service:", error);
+    }
+    reset();
   };
 
   if (!open) return null;
@@ -120,12 +146,10 @@ const CreateServiceModal = ({
 
           <button
             className="w-full my-3 bg-[#9711FB] hover:bg-[#9711FB]/80 transition py-2.5 rounded text-white flex justify-center items-center gap-1"
-            disabled={isSubmitting}
+            disabled={isPending}
           >
             Create
-            {isSubmitting && (
-              <LoaderCircle size={20} className="animate-spin" />
-            )}
+            {isPending && <LoaderCircle size={20} className="animate-spin" />}
           </button>
         </form>
       </div>

@@ -12,7 +12,7 @@ const BubbleDisplay = ({
   Icon: LucideIcon;
 }) => {
   return (
-    <div className="grid grid-cols-[100px_300px] border border-[#F6A1CF]/20 bg-[#F6A1CF]/2 justify-center items-center p-5 rounded-3xl gap-5">
+    <div className="grid grid-cols-[100px_300px] border border-[#F6A1CF]/20 bg-[#F6A1CF]/2 justify-center items-center p-5 rounded-3xl gap-5 w-120">
       <div className="flex justify-center items-center">
         <div className="bg-[#F6A1CF]/10 p-5 rounded-4xl">
           <Icon size={50} />

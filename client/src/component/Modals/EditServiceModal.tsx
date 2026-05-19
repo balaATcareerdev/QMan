@@ -1,4 +1,4 @@
-import type { ServiceType } from "@/types/types";
+import type { ActiveService } from "@/auth/serviceApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useEffect } from "react";
@@ -22,7 +22,7 @@ const EditServiceModal = ({
 }: {
   open: boolean;
   onClose: () => void;
-  service: ServiceType;
+  service: ActiveService;
 }) => {
   const {
     register,
@@ -32,17 +32,17 @@ const EditServiceModal = ({
   } = useForm<formDataType>({
     resolver: zodResolver(schema),
     defaultValues: {
-      serviceName: service.name,
+      serviceName: service.serviceName,
       serviceDescription: service.description,
-      serviceDate: new Date(service.createdAt).toISOString().split("T")[0],
+      serviceDate: new Date(service.date).toISOString().split("T")[0],
     },
   });
 
   useEffect(() => {
     reset({
-      serviceName: service.name,
+      serviceName: service.serviceName,
       serviceDescription: service.description,
-      serviceDate: new Date(service.createdAt).toISOString().split("T")[0],
+      serviceDate: new Date(service.date).toISOString().split("T")[0],
     });
   }, [service, reset]);
 
