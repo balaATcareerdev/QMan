@@ -57,9 +57,14 @@ const LoginPage = () => {
   const { mutateAsync: doLogin } = useMutation({
     mutationFn: userLogin,
     onSuccess: async (data) => {
-      await refreshAuth();
-      navigate("/");
-      toast.success(data.message);
+      try {
+        await refreshAuth();
+        navigate("/");
+        toast.success(data.message);
+      } catch (error) {
+        console.error("Post-login error:", error);
+        toast.error("Login succeeded but navigation failed. Please refresh.");
+      }
     },
     onError: (error: AxiosError<{ error: string }>) => {
       toast.error(error.response?.data?.error || "Login failed");
@@ -69,9 +74,16 @@ const LoginPage = () => {
   const { mutateAsync: doRegister } = useMutation({
     mutationFn: userRegister,
     onSuccess: async (data) => {
-      await refreshAuth();
-      navigate("/");
-      toast.success(data.message);
+      try {
+        await refreshAuth();
+        navigate("/");
+        toast.success(data.message);
+      } catch (error) {
+        console.error("Post-registration error:", error);
+        toast.error(
+          "Registration succeeded but navigation failed. Please refresh.",
+        );
+      }
     },
     onError: (error: AxiosError<{ error: string }>) => {
       toast.error(error.response?.data?.error || "Registration failed");

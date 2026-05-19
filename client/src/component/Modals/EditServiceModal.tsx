@@ -24,6 +24,7 @@ const EditServiceModal = ({
   onClose: () => void;
   service: ActiveService;
 }) => {
+  const toDateInputValue = (value: string) => value.slice(0, 10);
   const {
     register,
     handleSubmit,
@@ -34,7 +35,7 @@ const EditServiceModal = ({
     defaultValues: {
       serviceName: service.serviceName,
       serviceDescription: service.description,
-      serviceDate: new Date(service.date).toISOString().split("T")[0],
+      serviceDate: toDateInputValue(service.date),
     },
   });
 
@@ -42,7 +43,7 @@ const EditServiceModal = ({
     reset({
       serviceName: service.serviceName,
       serviceDescription: service.description,
-      serviceDate: new Date(service.date).toISOString().split("T")[0],
+      serviceDate: toDateInputValue(service.date),
     });
   }, [service, reset]);
 

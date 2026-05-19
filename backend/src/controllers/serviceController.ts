@@ -14,8 +14,6 @@ export const createService = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "User ID is required" });
   }
 
-  console.log("Creating service for user ID:", userId);
-
   const parsedId = idSchema.safeParse({ userId });
   if (!parsedId.success) {
     return res
@@ -89,24 +87,26 @@ export const getActiveServices = async (req: Request, res: Response) => {
       limit: 5,
     });
 
-    const formattedServices = services.map((service) => ({
-      id: service.id,
-      serviceName: service.serviceName,
-      description: service.description,
-      date: service.date,
-      createdAt: service.createdAt,
-      updatedAt: service.updatedAt,
-      isPaused: service.isPaused,
-      activeSlots: service.slots.filter((slot) => slot.status === "active")
-        .length,
-      avgSecPerPerson:
-        service.slots.length > 0
-          ? service.slots
-              .filter((slot) => slot.status === "active")
-              .reduce((acc, current) => acc + current.avgTime, 0) /
-            service.slots.length
-          : 0,
-    }));
+    const formattedServices = services.map((service) => {
+      const activeSlots = service.slots.filter(
+        (slot) => slot.status === "active",
+      );
+      return {
+        id: service.id,
+        serviceName: service.serviceName,
+        description: service.description,
+        date: service.date,
+        createdAt: service.createdAt,
+        updatedAt: service.updatedAt,
+        isPaused: service.isPaused,
+        activeSlots: activeSlots.length,
+        avgSecPerPerson:
+          activeSlots.length > 0
+            ? activeSlots.reduce((acc, current) => acc + current.avgTime, 0) /
+              activeSlots.length
+            : 0,
+      };
+    });
 
     return res.status(200).json({
       success: true,
@@ -145,25 +145,28 @@ export const getUpcomingServices = async (req: Request, res: Response) => {
       limit: 5,
     });
 
-    const formattedServices = services.map((service) => ({
-      id: service.id,
-      serviceName: service.serviceName,
-      description: service.description,
-      date: service.date,
-      createdAt: service.createdAt,
-      updatedAt: service.updatedAt,
-      isPaused: service.isPaused,
-      activeSlots: service.slots.filter((slot) => slot.status === "active")
-        .length,
-      avgSecPerPerson:
-        service.slots.length > 0
-          ? service.slots
-              .filter((slot) => slot.status === "active")
-              .reduce((acc, current) => acc + current.avgTime, 0) /
-            service.slots.length
-          : 0,
-      totalSlots: service.slots.length,
-    }));
+    const formattedServices = services.map((service) => {
+      const upcomingSlots = service.slots.filter(
+        (slot) => slot.status === "upcoming",
+      );
+
+      return {
+        id: service.id,
+        serviceName: service.serviceName,
+        description: service.description,
+        date: service.date,
+        createdAt: service.createdAt,
+        updatedAt: service.updatedAt,
+        isPaused: service.isPaused,
+        activeSlots: upcomingSlots.length,
+        avgSecPerPerson:
+          upcomingSlots.length > 0
+            ? upcomingSlots.reduce((acc, current) => acc + current.avgTime, 0) /
+              upcomingSlots.length
+            : 0,
+        totalSlots: upcomingSlots.length,
+      };
+    });
 
     return res.status(200).json({
       success: true,

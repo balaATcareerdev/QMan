@@ -115,8 +115,8 @@ const Home = () => {
           </div>
         ) : serviceData?.length > 0 ? (
           <div className="flex flex-col justify-center items-center gap-5 pt-5 px-10">
-            {serviceData.map((ser, index) => (
-              <ServiceCard key={index} service={ser} />
+            {serviceData.map((ser) => (
+              <ServiceCard key={ser.id} service={ser} />
             ))}
           </div>
         ) : (
