@@ -7,9 +7,9 @@ export const idSchema = z.object({
 export const createSlotSchema = z.object({
   serviceId: z.string().uuid(),
   serviceName: z.string().min(1, "Service name is required"),
-  createdAt: z.coerce.date().min(1, "Creation date is required"),
-  startTime: z.coerce.date().min(1, "Start time is required"),
-  endTime: z.coerce.date().min(1, "End time is required"),
+  createdAt: z.coerce.date(),
+  startTime: z.coerce.date(),
+  endTime: z.coerce.date(),
   capacity: z.number().int().positive("Capacity must be a positive integer"),
   bookedCount: z
     .number()

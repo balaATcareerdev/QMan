@@ -18,7 +18,7 @@ const UpcomingService = ({
   >;
 }) => {
   const queryClient = useQueryClient();
-  const { mutateAsync: doStartService, isPending: isStarting } = useMutation({
+  const { mutate: doStartService, isPending: isStarting } = useMutation({
     mutationFn: async (serviceId: string) => {
       return await startService(serviceId);
     },

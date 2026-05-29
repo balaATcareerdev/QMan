@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import {
   createServiceSchema,
   idSchema,
+  serviceIdSchema,
 } from "../validation/serviceValidation.js";
 import { db } from "../database/db.js";
 import { serviceSchema, userSchema } from "../database/schema.js";
@@ -251,8 +252,11 @@ export const startService = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "User ID is required" });
   }
   const serviceId = req.params.serviceId as string;
-  if (!serviceId) {
-    return res.status(400).json({ error: "Service ID is required" });
+
+  const parseServiceId = serviceIdSchema.safeParse({ serviceId });
+
+  if (!parseServiceId.success) {
+    return res.status(400).json({ error: "Invalid service ID" });
   }
 
   try {
@@ -263,7 +267,7 @@ export const startService = async (req: Request, res: Response) => {
       })
       .where(
         and(
-          eq(serviceSchema.id, serviceId),
+          eq(serviceSchema.id, parseServiceId.data.serviceId),
           eq(serviceSchema.createdBy, userId),
         ),
       )
