@@ -87,9 +87,11 @@ export const getActiveServices = async (req: Request, res: Response) => {
       limit: 5,
     });
 
+    const now = new Date();
+
     const formattedServices = services.map((service) => {
       const activeSlots = service.slots.filter(
-        (slot) => slot.status === "active",
+        (slot) => now > slot.startTime && slot.endTime > now,
       );
       return {
         id: service.id,
@@ -145,9 +147,11 @@ export const getUpcomingServices = async (req: Request, res: Response) => {
       limit: 5,
     });
 
+    const now = new Date();
+
     const formattedServices = services.map((service) => {
       const upcomingSlots = service.slots.filter(
-        (slot) => slot.status === "upcoming",
+        (slot) => now < slot.startTime,
       );
 
       return {
@@ -212,9 +216,14 @@ export const getServiceStats = async (req: Request, res: Response) => {
         (service.slots.length || 1),
     );
 
+    const now = new Date();
+
     const availableSlots = services.reduce(
       (acc, service) =>
-        acc + service.slots.filter((slot) => slot.status === "active").length,
+        acc +
+        service.slots.filter(
+          (slot) => now > slot.startTime && slot.endTime > now,
+        ).length,
       0,
     );
 
