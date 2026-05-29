@@ -71,6 +71,13 @@
       "when": 1779195140072,
       "tag": "0009_pretty_sinister_six",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1779483202867,
+      "tag": "0010_lively_enchantress",
+      "breakpoints": true
     }
   ]
 }

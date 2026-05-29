@@ -1,7 +1,10 @@
-import type { ActiveService } from "@/auth/serviceApi";
+import { startService, type ActiveService } from "@/auth/serviceApi";
 import PrimaryGradHome from "@/component/Buttons/PrimaryGradHome";
 import SecondaryGradHome from "@/component/Buttons/SecondaryGradHome";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 import { Calendar1, ClockArrowUp } from "lucide-react";
+import { toast } from "react-toastify";
 
 const UpcomingService = ({
   service,
@@ -14,6 +17,26 @@ const UpcomingService = ({
     React.SetStateAction<ActiveService | null>
   >;
 }) => {
+  const queryClient = useQueryClient();
+  const { mutate: doStartService, isPending: isStarting } = useMutation({
+    mutationFn: async (serviceId: string) => {
+      return await startService(serviceId);
+    },
+    onSuccess: async (data) => {
+      toast.success(data.message);
+      queryClient.invalidateQueries({ queryKey: ["active_services"] });
+      queryClient.invalidateQueries({ queryKey: ["upcoming_services"] });
+      queryClient.invalidateQueries({ queryKey: ["service_stats"] });
+    },
+    onError: (error: AxiosError<{ error: string }>) => {
+      console.error("Error starting service:", error);
+      toast.error(
+        error.response?.data?.error ||
+          "Failed to start service. Please try again.",
+      );
+    },
+  });
+
   return (
     <div className="text-white grid grid-cols-[10%_60%_15%_1fr] min-w-360 w-full bg-[#0e0e1f] p-5 rounded-3xl">
       <div className="flex justify-center items-center">
@@ -55,7 +78,11 @@ const UpcomingService = ({
             setOpenEdit(true);
           }}
         />
-        <SecondaryGradHome text="Start Now" />
+        <SecondaryGradHome
+          onClick={() => doStartService(service.id)}
+          text="Start Now"
+          isPending={isStarting}
+        />
       </div>
     </div>
   );

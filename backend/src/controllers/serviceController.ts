@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import {
   createServiceSchema,
   idSchema,
+  serviceIdSchema,
 } from "../validation/serviceValidation.js";
 import { db } from "../database/db.js";
 import { serviceSchema, userSchema } from "../database/schema.js";
@@ -87,9 +88,11 @@ export const getActiveServices = async (req: Request, res: Response) => {
       limit: 5,
     });
 
+    const now = new Date();
+
     const formattedServices = services.map((service) => {
       const activeSlots = service.slots.filter(
-        (slot) => slot.status === "active",
+        (slot) => now > slot.startTime && slot.endTime > now,
       );
       return {
         id: service.id,
@@ -145,9 +148,11 @@ export const getUpcomingServices = async (req: Request, res: Response) => {
       limit: 5,
     });
 
+    const now = new Date();
+
     const formattedServices = services.map((service) => {
       const upcomingSlots = service.slots.filter(
-        (slot) => slot.status === "upcoming",
+        (slot) => now < slot.startTime,
       );
 
       return {
@@ -212,9 +217,14 @@ export const getServiceStats = async (req: Request, res: Response) => {
         (service.slots.length || 1),
     );
 
+    const now = new Date();
+
     const availableSlots = services.reduce(
       (acc, service) =>
-        acc + service.slots.filter((slot) => slot.status === "active").length,
+        acc +
+        service.slots.filter(
+          (slot) => now > slot.startTime && slot.endTime > now,
+        ).length,
       0,
     );
 
@@ -232,6 +242,50 @@ export const getServiceStats = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error fetching service stats:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const startService = async (req: Request, res: Response) => {
+  const userId = req.userId;
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+  const serviceId = req.params.serviceId as string;
+
+  const parseServiceId = serviceIdSchema.safeParse({ serviceId });
+
+  if (!parseServiceId.success) {
+    return res.status(400).json({ error: "Invalid service ID" });
+  }
+
+  try {
+    const [updatedService] = await db
+      .update(serviceSchema)
+      .set({
+        date: new Date(),
+      })
+      .where(
+        and(
+          eq(serviceSchema.id, parseServiceId.data.serviceId),
+          eq(serviceSchema.createdBy, userId),
+        ),
+      )
+      .returning();
+
+    if (!updatedService) {
+      return res
+        .status(404)
+        .json({ error: "Service not found or not authorized" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Service started",
+      service: updatedService,
+    });
+  } catch (error) {
+    console.error("Error starting service:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

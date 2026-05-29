@@ -55,7 +55,6 @@ export const slotSchema = pgTable("slot", {
   serviceName: varchar("service_name", { length: 255 }).notNull(),
   startTime: timestamp("start_time").notNull(),
   endTime: timestamp("end_time").notNull(),
-  status: serviceStatusEnum("status").notNull(),
   capacity: integer("capacity").notNull(),
   bookedCount: integer("booked_count").notNull().default(0),
   currentToken: integer("current_token").notNull().default(0),

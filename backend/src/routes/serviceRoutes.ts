@@ -4,6 +4,7 @@ import {
   getActiveServices,
   getServiceStats,
   getUpcomingServices,
+  startService,
 } from "../controllers/serviceController.js";
 import { userAuth } from "../middleware/userAuth.js";
 
@@ -16,5 +17,7 @@ serviceRouter.get("/active", userAuth, getActiveServices);
 serviceRouter.get("/stats", userAuth, getServiceStats);
 
 serviceRouter.get("/upcoming", userAuth, getUpcomingServices);
+
+serviceRouter.post("/start/:serviceId", userAuth, startService);
 
 export default serviceRouter;

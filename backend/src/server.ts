@@ -3,6 +3,7 @@ import authRouter from "./routes/authRoutes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import serviceRouter from "./routes/serviceRoutes.js";
+import slotRouter from "./routes/slotRoute.js";
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRouter);
 app.use("/service", serviceRouter);
+app.use("/slot", slotRouter);
 
 export default app;

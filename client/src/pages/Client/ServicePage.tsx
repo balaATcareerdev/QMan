@@ -161,7 +161,7 @@ const ServicePage = () => {
           </section>
         </>
       ) : (
-        <div>
+        <div className="pt-20">
           <p className="text-white">Service not found</p>
         </div>
       )}
