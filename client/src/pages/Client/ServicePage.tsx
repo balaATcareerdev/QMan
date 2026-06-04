@@ -91,7 +91,7 @@ const ServicePage = () => {
           />
 
           <section className="px-20">
-            <ServiceHeader category="Active" />
+            <ServiceHeader category="Active" type="Slot" />
 
             <div className="mt-10">
               {statsData.activeSlots.length > 0 ? (
@@ -129,7 +129,7 @@ const ServicePage = () => {
           </section>
 
           <section className="px-20">
-            <ServiceHeader category="Upcoming" />
+            <ServiceHeader category="Upcoming" type="Slot" />
 
             {statsData.upcomingSlots.length > 0 ? (
               <div className="flex justify-center items-center gap-10 py-20">

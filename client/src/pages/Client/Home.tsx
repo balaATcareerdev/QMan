@@ -107,7 +107,7 @@ const Home = () => {
       <HeroSection />
 
       <section className="px-20 pb-10">
-        <ServiceHeader category="Active" />
+        <ServiceHeader category="Active" type="Service" />
 
         {isActiveServiceLoading ? (
           <div className="flex justify-center items-center">
@@ -127,7 +127,7 @@ const Home = () => {
       </section>
 
       <section className="px-20 pb-20">
-        <ServiceHeader category="Upcoming" />
+        <ServiceHeader category="Upcoming" type="Service" />
 
         {isUpcomingServiceLoading ? (
           <div className="flex justify-center items-center">
