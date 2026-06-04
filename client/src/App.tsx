@@ -13,12 +13,17 @@ import NotFound from "@/pages/NotFound";
 import ProtectedRoute from "@/auth/ProtectedRoute";
 import UnAuthorized from "@/pages/UnAuthorized";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { LoaderCircle } from "lucide-react";
 
 const App = () => {
   const { isLoading } = useAuthContext();
 
   if (isLoading) {
-    return <div>Authentication Processing...</div>;
+    return (
+      <section className="min-h-screen flex justify-center items-center bg-black">
+        <LoaderCircle size={64} color="white" className="animate-spin" />
+      </section>
+    );
   }
 
   return (
