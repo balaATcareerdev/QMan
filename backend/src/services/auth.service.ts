@@ -7,6 +7,19 @@ import jwt from "jsonwebtoken";
 import { AppError } from "../errors/AppError.js";
 
 class AuthService {
+  private readonly jwtSecret: string;
+
+  constructor() {
+    if (!process.env.JWT_SECRET) {
+      throw new AppError(
+        "JWT_SECRET is not defined in environment variables",
+        500,
+      );
+    }
+
+    this.jwtSecret = process.env.JWT_SECRET;
+  }
+
   async register(data: RegisterBody) {
     const existingUser = await db.query.userSchema.findFirst({
       where: eq(userSchema.email, data.email),
@@ -37,7 +50,7 @@ class AuthService {
       throw new AppError("Failed to create user", 500);
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ id: user.id }, this.jwtSecret, {
       expiresIn: "1h",
     });
 
@@ -59,7 +72,7 @@ class AuthService {
     });
 
     if (!existingUser) {
-      throw new AppError("Invalid email", 400);
+      throw new AppError("Invalid Credentials", 401);
     }
 
     const passwordMatch = await bcrypt.compare(
@@ -68,10 +81,10 @@ class AuthService {
     );
 
     if (!passwordMatch) {
-      throw new AppError("Invalid password", 400);
+      throw new AppError("Invalid Credentials", 401);
     }
 
-    const token = jwt.sign({ id: existingUser.id }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ id: existingUser.id }, this.jwtSecret, {
       expiresIn: "1h",
     });
 
