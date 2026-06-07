@@ -4,20 +4,51 @@ import {
   getActiveServices,
   getServiceStats,
   getUpcomingServices,
-  startService,
+  activateService,
 } from "../controllers/serviceController.js";
 import { userAuth } from "../middleware/userAuth.js";
+import {
+  roleValidate,
+  validate,
+  validateParamId,
+} from "../middleware/validate.js";
+import {
+  createServiceSchema,
+  serviceIdSchema,
+} from "../validation/serviceValidation.js";
 
 const serviceRouter = Router();
 
-serviceRouter.post("/create", userAuth, createService);
+serviceRouter.post(
+  "/create",
+  userAuth,
+  roleValidate("Client"),
+  validate(createServiceSchema),
+  createService,
+);
 
-serviceRouter.get("/active", userAuth, getActiveServices);
+serviceRouter.get(
+  "/active",
+  userAuth,
+  roleValidate("Client"),
+  getActiveServices,
+);
 
-serviceRouter.get("/stats", userAuth, getServiceStats);
+serviceRouter.get("/stats", userAuth, roleValidate("Client"), getServiceStats);
 
-serviceRouter.get("/upcoming", userAuth, getUpcomingServices);
+serviceRouter.get(
+  "/upcoming",
+  userAuth,
+  roleValidate("Client"),
+  getUpcomingServices,
+);
 
-serviceRouter.post("/start/:serviceId", userAuth, startService);
+serviceRouter.post(
+  "/activate/:serviceId",
+  userAuth,
+  roleValidate("Client"),
+  validateParamId(serviceIdSchema),
+  activateService,
+);
 
 export default serviceRouter;
