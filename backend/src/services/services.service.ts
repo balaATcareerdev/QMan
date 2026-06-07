@@ -18,10 +18,17 @@ class ServicesService {
         FOR UPDATE
       `);
 
+      const startOfDay = new Date(data.date);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(startOfDay);
+      endOfDay.setDate(endOfDay.getDate() + 1);
+
       const services = await tx.query.serviceSchema.findMany({
         where: and(
           eq(serviceSchema.createdBy, data.id),
-          eq(serviceSchema.date, new Date(data.date)),
+          gte(serviceSchema.date, startOfDay),
+          lt(serviceSchema.date, endOfDay),
         ),
       });
 
@@ -58,7 +65,7 @@ class ServicesService {
         serviceName: serviceSchema.serviceName,
         description: serviceSchema.description,
         date: serviceSchema.date,
-        slotCount: sql<number>`count(${slotSchema.id})`,
+        slotCount: sql<number>`count(${slotSchema.id})::int`,
       })
       .from(serviceSchema)
       .leftJoin(slotSchema, eq(slotSchema.serviceId, serviceSchema.id))
@@ -145,26 +152,28 @@ class ServicesService {
     const tmr = new Date(today);
     tmr.setDate(tmr.getDate() + 1);
 
-    const service = await db.query.serviceSchema.findFirst({
-      where: and(
-        eq(serviceSchema.id, serviceId),
-        eq(serviceSchema.createdBy, userId),
-      ),
-    });
-
-    if (!service) {
-      throw new AppError("Service not found", 404);
-    }
-
-    if (service.date.getDate() < today.getDate()) {
-      throw new AppError("Cannot activate an expired service", 400);
-    }
-
-    if (service.date.getDate() == today.getDate()) {
-      throw new AppError("Service is already active", 400);
-    }
-
     return db.transaction(async (tx) => {
+      const service = await db.query.serviceSchema.findFirst({
+        where: and(
+          eq(serviceSchema.id, serviceId),
+          eq(serviceSchema.createdBy, userId),
+        ),
+      });
+
+      if (!service) {
+        throw new AppError("Service not found", 404);
+      }
+
+      const serviceDate = new Date(service.date);
+      serviceDate.setHours(0, 0, 0, 0);
+      if (serviceDate < today) {
+        throw new AppError("Cannot activate an expired service", 400);
+      }
+
+      if (service.date >= today && service.date < tmr) {
+        throw new AppError("Service is already active", 400);
+      }
+
       await tx.execute(sql`
         SELECT id
         FROM users

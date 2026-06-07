@@ -25,7 +25,7 @@ export const roleValidate =
     const userId = req.userId;
 
     if (!userId) {
-      return res.status(400).json({ error: "User ID is required" });
+      return res.status(401).json({ error: "User ID is required" });
     }
 
     const user = await db.query.userSchema.findFirst({
@@ -39,6 +39,10 @@ export const roleValidate =
       return res.status(404).json({ error: "User not found" });
     }
 
+    if (!user.plan) {
+      return next(new AppError("User subscription plan not found", 500));
+    }
+
     req.role = user.role;
     req.maxActiveTokens = user.plan.maxActiveTokens;
     req.maxActiveServices = user.plan.maxActiveServices;
@@ -50,4 +54,18 @@ export const roleValidate =
         .json({ error: "Forbidden", message: "Insufficient permissions" });
     }
     next();
+  };
+
+export const validateParamId =
+  (schema: ZodType) => (req: Request, res: Response, next: NextFunction) => {
+    const result = schema.safeParse(req.params);
+
+    if (!result.success) {
+      return res.status(400).json({
+        success: false,
+        error: result.error.issues,
+        message: "Invalid Parameter ID",
+      });
+    }
+    return next();
   };

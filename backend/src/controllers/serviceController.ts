@@ -115,7 +115,7 @@ export const activateService = async (
   }
   const serviceId = req.params.serviceId as string;
 
-  if (!req.maxActiveServices) {
+  if (req.maxActiveServices == null) {
     throw new AppError("Max active services limit is required", 400);
   }
 

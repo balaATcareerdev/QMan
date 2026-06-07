@@ -7,8 +7,15 @@ import {
   activateService,
 } from "../controllers/serviceController.js";
 import { userAuth } from "../middleware/userAuth.js";
-import { roleValidate, validate } from "../middleware/validate.js";
-import { createServiceSchema } from "../validation/serviceValidation.js";
+import {
+  roleValidate,
+  validate,
+  validateParamId,
+} from "../middleware/validate.js";
+import {
+  createServiceSchema,
+  serviceIdSchema,
+} from "../validation/serviceValidation.js";
 
 const serviceRouter = Router();
 
@@ -40,6 +47,7 @@ serviceRouter.post(
   "/activate/:serviceId",
   userAuth,
   roleValidate("Client"),
+  validateParamId(serviceIdSchema),
   activateService,
 );
 

@@ -1,5 +1,4 @@
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjllNmViZDJjLWM2YmQtNGE4Mi1iNGRhLWZmNGZkMTI3N2MzZiIsImlhdCI6MTc4MDg1MTk3NywiZXhwIjoxNzgwODU1NTc3fQ.vtU1CB45SyYpSh65gcswRRLOKZTmQE-qBxUfWDJAJNU";
+const token = "";
 
 const body = {
   serviceName: "Lunch",
