@@ -40,7 +40,7 @@ class SlotService {
 
   async getActiveSlots(serviceId: string) {
     const result = await db.execute(sql`
-            SELECT * AS activeSlots
+            SELECT *
             FROM ${slotSchema}
             WHERE ${slotSchema.serviceId} = ${serviceId} AND ${slotSchema.startTime} <= NOW() AND (${slotSchema.endTime} IS NULL OR ${slotSchema.endTime} >= NOW())
         `);

@@ -71,7 +71,7 @@ export const getActiveSlots = async (
 
   try {
     const result = await slotService.getAllActiveSlots(serviceId, userId);
-    return res.status(200).json({});
+    return res.status(200).json(result);
   } catch (error) {
     next(error);
   }
