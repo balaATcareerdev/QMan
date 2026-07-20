@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 export const idSchema = z.object({
-  userId: z.string().uuid(),
+  userId: z.uuid(),
 });
 
 export const serviceIdSchema = z.object({
-  serviceId: z.string().uuid(),
+  serviceId: z.uuid(),
 });
 
 export const createServiceSchema = z.object({
