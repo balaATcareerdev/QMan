@@ -1,35 +1,103 @@
-// import type { Request, Response } from "express";
-// import { createSlotSchema, idSchema } from "../validation/slotValidation.js";
-// import { db } from "../database/db.js";
-// import { slotSchema } from "../database/schema.js";
+import type { NextFunction, Request, Response } from "express";
+import { slotService } from "../services/slot.services.js";
+import { AppError } from "../errors/AppError.js";
 
-// export const createSlot = async (req: Request, res: Response) => {
-//   const serviceId = req.params.serviceId;
-//   const parsedId = idSchema.safeParse({
-//     serviceId,
-//   });
+export const getSlotStats = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const serviceId = req.query.serviceId as string;
 
-//   if (!parsedId.success) {
-//     return res.status(400).json({ error: parsedId.error.issues });
-//   }
+    if (!serviceId) {
+      throw new AppError("Service ID is required", 400);
+    }
 
-//   const parsedBody = createSlotSchema.safeParse({
-//     ...req.body,
-//     serviceId,
-//   });
+    console.log("Received request for slot stats with serviceId:", serviceId);
 
-//   if (!parsedBody.success) {
-//     return res.status(400).json({ error: parsedBody.error.issues });
-//   }
+    const result = await slotService.getSlotStats(serviceId);
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
-//   try {
-//     const [createdSlot] = await db
-//       .insert(slotSchema)
-//       .values(parsedBody.data)
-//       .returning();
-//     return res.status(201).json(createdSlot);
-//   } catch (error) {
-//     console.log("Error creating slot:", error);
-//     return res.status(500).json({ error: "Internal server error" });
-//   }
-// };
+export const createNewSlot = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const serviceId = req.body.serviceId as string;
+    const userId = req.userId;
+    if (!serviceId) {
+      throw new AppError("Service ID is required", 400);
+    }
+
+    console.log(
+      "Received request to create new slot with serviceId:",
+      serviceId,
+    );
+
+    const result = await slotService.createSlot({
+      ...req.body,
+      serviceId,
+      id: userId,
+      maxActiveSlots: req.maxActiveSlots,
+    });
+
+    return res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getActiveSlots = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const serviceId = req.query.serviceId as string;
+  const userId = req.userId;
+
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  if (!serviceId) {
+    return res.status(400).json({ error: "Service ID is required" });
+  }
+
+  try {
+    const result = await slotService.getAllActiveSlots(serviceId, userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUpcomingSlots = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const serviceId = req.query.serviceId as string;
+
+  if (!serviceId) {
+    return res.status(400).json({ error: "Service ID is required" });
+  }
+
+  const userId = req.userId;
+
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const result = await slotService.getUpcomingSlots(serviceId, userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};

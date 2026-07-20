@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export const idSchema = z.object({
-  serviceId: z.string().uuid(),
+  serviceId: z.uuid(),
 });
 
 export const createSlotSchema = z.object({
-  serviceId: z.string().uuid(),
-  serviceName: z.string().min(1, "Service name is required"),
-  createdAt: z.coerce.date(),
+  serviceId: z.uuid(),
+  slotName: z.string().min(1, "Slot name is required"),
+  // createdAt: z.coerce.date(),
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
   capacity: z.number().int().positive("Capacity must be a positive integer"),
