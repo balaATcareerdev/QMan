@@ -87,8 +87,7 @@ const RegisterForm = ({ switchToLogin }: RegisterFormProps) => {
 
   const { mutateAsync: registerUser } = useMutation({
     mutationFn: createUser,
-    onSuccess: (data) => {
-      console.log("Registration successful:", data);
+    onSuccess: () => {
       toast.success("Registration successful!");
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },

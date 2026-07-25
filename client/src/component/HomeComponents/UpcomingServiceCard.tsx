@@ -3,7 +3,7 @@ import HeaderClient from "@/pages/Client/ServiceComponent/HeaderClient";
 import ServiceDateAndSlotMeta from "@/pages/Client/ServiceComponent/ServiceDateAndSlotMeta";
 import SlotsListClient from "@/component/HomeComponents/SlotsList";
 import { getTimeRemaining } from "@/util/dateUtilts";
-import { ChevronRight, MoreVertical } from "lucide-react";
+import { ChevronRight, Edit, MoreVertical } from "lucide-react";
 
 interface UpcomingServiceCardProps {
   serviceName: string;
@@ -48,7 +48,12 @@ const UpcomingServiceCard = ({
 
       {/* Footer */}
       <button className="mt-10 flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 py-5 text-xl font-semibold hover:bg-slate-50">
-        Manage Service
+        Edit
+        <Edit className="h-5 w-5" />
+      </button>
+
+      <button className="mt-10 flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 py-5 text-xl font-semibold hover:bg-slate-50">
+        Start Now
         <ChevronRight className="h-5 w-5" />
       </button>
     </div>

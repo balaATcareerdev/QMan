@@ -46,13 +46,11 @@ const LoginForm = ({ switchToRegister }: LoginFormProps) => {
 
   const { mutateAsync: login, isPending: isSubmitting } = useMutation({
     mutationFn: loginUser,
-    onSuccess: (data) => {
-      console.log("Login successful:", data);
+    onSuccess: () => {
       toast.success("Login successful!");
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (error) => {
-      console.log("Login failed:", error);
       toast.error(getApiErrorMessage(error));
     },
   });

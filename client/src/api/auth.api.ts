@@ -15,7 +15,6 @@ interface userRegisterData {
 
 export const getAuthUser = async () => {
   const response = await api.get("/auth/is-auth");
-  console.log("Auth user response:", response.data);
   return response.data.user;
 };
 

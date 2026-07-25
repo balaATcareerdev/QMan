@@ -104,7 +104,7 @@ export function getTimeRemaining(date: string | Date): string {
   const diff = target.getTime() - now.getTime();
 
   if (diff <= 0) {
-    return "Service Started";
+    return "Service starting soon";
   }
 
   const totalMinutes = Math.floor(diff / (1000 * 60));

@@ -17,10 +17,6 @@ const App = () => {
     retry: false, // Disable retry on failure
   });
 
-  if (userData) {
-    console.log("User data:", userData);
-  }
-
   if (userDetailsLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
