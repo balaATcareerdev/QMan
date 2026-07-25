@@ -1,34 +1,36 @@
 import { Route, Routes } from "react-router";
 import Home from "@/pages/Client/Home";
-import PricingPage from "@/pages/Client/PricingPage";
-import ServicePage from "@/pages/Client/ServicePage";
-import SlotPage from "@/pages/Client/SlotPage";
-import Booked from "@/pages/Customer/Booked";
-import LoginPage from "@/pages/LoginPage";
-import CustomerHome from "@/pages/Customer/CustomerHome";
-import CustomerLayout from "@/layout/CustomerLayout";
-import ClientLayout from "@/layout/ClientLayout";
 import HomeRedirect from "@/layout/HomeRedirect";
-import NotFound from "@/pages/NotFound";
-import ProtectedRoute from "@/auth/ProtectedRoute";
-import UnAuthorized from "@/pages/UnAuthorized";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { LoaderCircle } from "lucide-react";
+import ClientLayout from "@/layout/ClientLayout";
+import PricingPage from "@/pages/Client/PricingPage";
+import LoginPage from "@/pages/LoginPage";
+import { useQuery } from "@tanstack/react-query";
+import { getAuthUser } from "@/api/auth.api";
+import { AuthContext } from "@/context/AuthContext";
+import ProtectRoute from "@/routes/ProtectRoute";
+import PublicRoute from "@/routes/PublicRoute";
 
 const App = () => {
-  const { isLoading } = useAuthContext();
+  const { data: userData, isLoading: userDetailsLoading } = useQuery({
+    queryKey: ["user"],
+    queryFn: getAuthUser,
+    retry: false, // Disable retry on failure
+  });
 
-  if (isLoading) {
+  if (userDetailsLoading) {
     return (
-      <section className="min-h-screen flex justify-center items-center bg-black">
-        <LoaderCircle size={64} color="white" className="animate-spin" />
-      </section>
+      <div className="flex h-screen w-screen items-center justify-center">
+        <p className="text-lg font-semibold">Loading...</p>
+      </div>
     );
   }
 
   return (
-    <div className="relative">
-      <Routes>
+    <AuthContext.Provider
+      value={{ user: userData, isLoading: userDetailsLoading }}
+    >
+      <div className="relative">
+        {/* <Routes>
         <Route path="/" element={<HomeRedirect />} />
 
         <Route element={<ProtectedRoute allowedRole="Customer" />}>
@@ -50,8 +52,26 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/unauthorized" element={<UnAuthorized />} />
         <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+      </Routes> */}
+        <Routes>
+          <Route path="/" element={<HomeRedirect />} />
+
+          {/* public routes */}
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+          </Route>
+
+          {/* Private Routes */}
+
+          <Route element={<ProtectRoute />}>
+            <Route path="/client" element={<ClientLayout />}>
+              <Route index element={<Home />} />
+              <Route path="pricing" element={<PricingPage />} />
+            </Route>
+          </Route>
+        </Routes>
+      </div>
+    </AuthContext.Provider>
   );
 };
 

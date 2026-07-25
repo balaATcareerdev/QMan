@@ -1,49 +1,12 @@
-import {
-  getActiveServices,
-  getUpcomingServices,
-  type ActiveService,
-} from "@/auth/serviceApi";
-import ServiceHeader from "@/component/Header/ServiceHeader";
-import HeroSection from "@/component/Home/HeroSection";
-import ServiceCard from "@/component/Home/ServiceCard";
-import UpcomingService from "@/component/Home/UpcomingService";
-import EditServiceModal from "@/component/Modals/EditServiceModal";
-import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import HeroSection from "@/component/HomeComponents/HeroSection";
+import Stats from "@/component/HomeComponents/Stats";
+import CreateServiceModal from "@/component/Modals/CreateServiceModal";
+import ActiveServiceSection from "@/component/HomeComponents/ActiveServiceSection";
+import PeekIntoUpcomingSlots from "@/component/HomeComponents/PeekIntoUpcomingSlots";
+import UpcomingServiceSection from "@/component/HomeComponents/UpcomingServiceSection";
 import { useState } from "react";
 
 const Home = () => {
-  const [openEdit, setOpenEdit] = useState<boolean>(false);
-  const [selectedService, setSelectedService] = useState<ActiveService | null>(
-    null,
-  );
-
-  const { data: serviceData = [], isLoading: isActiveServiceLoading } =
-    useQuery({
-      queryKey: ["active_services"],
-      queryFn: async () => {
-        const response = await getActiveServices();
-        if (response.success) {
-          console.log(response.services);
-        }
-        return response.services;
-      },
-    });
-
-  const {
-    data: upcomingServiceData = [],
-    isLoading: isUpcomingServiceLoading,
-  } = useQuery({
-    queryKey: ["upcoming_services"],
-    queryFn: async () => {
-      const response = await getUpcomingServices();
-      if (response.success) {
-        console.log(response.services);
-      }
-      return response.services;
-    },
-  });
-
   // const stats = useMemo(() => {
   //   const activeService = services.filter(
   //     (service) => service.status === "active",
@@ -102,63 +65,19 @@ const Home = () => {
   //   };
   // }, [services, slots]);
 
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+
   return (
-    <div className="bg-[#01010f]  pt-30 min-h-screen">
-      <HeroSection />
-
-      <section className="px-20 pb-10">
-        <ServiceHeader category="Active" type="Service" />
-
-        {isActiveServiceLoading ? (
-          <div className="flex justify-center items-center">
-            <Loader2 size={40} color="white" className="animate-spin" />
-          </div>
-        ) : serviceData?.length > 0 ? (
-          <div className="flex flex-col justify-center items-center gap-5 pt-5 px-10">
-            {serviceData.map((ser) => (
-              <ServiceCard key={ser.id} service={ser} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex justify-center items-center">
-            <p className="text-white">No Active services available.</p>
-          </div>
-        )}
-      </section>
-
-      <section className="px-20 pb-20">
-        <ServiceHeader category="Upcoming" type="Service" />
-
-        {isUpcomingServiceLoading ? (
-          <div className="flex justify-center items-center">
-            <Loader2 size={40} color="white" className="animate-spin" />
-          </div>
-        ) : upcomingServiceData.length > 0 ? (
-          <div className="flex flex-col justify-center items-center gap-5 pt-5 px-10">
-            {upcomingServiceData.map((ser) => (
-              <UpcomingService
-                key={ser.id}
-                service={ser}
-                setOpenEdit={setOpenEdit}
-                setSelectedService={setSelectedService}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="flex justify-center items-center">
-            <p className="text-white">No upcoming services available.</p>
-          </div>
-        )}
-      </section>
-
-      {openEdit && selectedService && (
-        <EditServiceModal
-          key={selectedService?.id}
-          open={openEdit}
-          onClose={() => setOpenEdit(false)}
-          service={selectedService}
-        />
-      )}
+    <div className="min-h-screen p-2">
+      <HeroSection setOpenCreateModal={setOpenCreateModal} />
+      <Stats />
+      <ActiveServiceSection />
+      <UpcomingServiceSection />
+      <PeekIntoUpcomingSlots />
+      <CreateServiceModal
+        open={openCreateModal}
+        onClose={() => setOpenCreateModal(false)}
+      />
     </div>
   );
 };

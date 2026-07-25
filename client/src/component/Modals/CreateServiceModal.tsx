@@ -1,4 +1,4 @@
-import { createService } from "@/auth/serviceApi";
+import { createService } from "@/api/serviceApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LoaderCircle } from "lucide-react";

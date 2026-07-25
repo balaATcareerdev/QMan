@@ -1,6 +1,6 @@
 import { user } from "@/assets/mockUser";
 import { userLogout } from "@/auth/userAuth";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 import { useMutation } from "@tanstack/react-query";
 import {
   Bell,
