@@ -1,4 +1,4 @@
-import type { ActiveService } from "@/auth/serviceApi";
+import type { ActiveService } from "@/api/serviceApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useEffect } from "react";

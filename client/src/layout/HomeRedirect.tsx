@@ -1,14 +1,8 @@
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 import { Navigate } from "react-router";
 
 const HomeRedirect = () => {
-  const { user, isLoading } = useAuthContext();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  console.log(user + " From Redirect");
+  const { user } = useAuthContext();
 
   if (!user) return <Navigate to="/login" replace />;
 
