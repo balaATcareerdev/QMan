@@ -15,7 +15,7 @@ const ProfileMenu = () => {
   const { mutateAsync: logout } = useMutation({
     mutationFn: logoutUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      queryClient.setQueryData(["user"], null);
       toast.success("Logged out successfully");
       navigate("/login");
     },

@@ -4,8 +4,14 @@ import ServiceDateAndSlotMeta from "@/pages/Client/ServiceComponent/ServiceDateA
 import SlotsListClient from "@/component/HomeComponents/SlotsList";
 import { getTimeRemaining } from "@/util/dateUtilts";
 import { ChevronRight, Edit, MoreVertical } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { getApiErrorMessage } from "@/util/errors";
+import { startService } from "@/api/service.api";
+import { useModalContext } from "@/context/ModalContext";
 
 interface UpcomingServiceCardProps {
+  id: string;
   serviceName: string;
   description: string;
   scheduledDate: string;
@@ -13,11 +19,37 @@ interface UpcomingServiceCardProps {
 }
 
 const UpcomingServiceCard = ({
+  id: serviceId,
   serviceName,
   description,
   scheduledDate,
   slots,
 }: UpcomingServiceCardProps) => {
+  const queryClient = useQueryClient();
+  const { setOpenEditModal, setSelectedService } = useModalContext();
+
+  const { mutateAsync: startServiceNow, isPending } = useMutation({
+    mutationFn: startService,
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["upcomingServices"] }),
+        queryClient.invalidateQueries({ queryKey: ["activeServices"] }),
+      ]);
+    },
+  });
+
+  const handleStart = async (serviceId: string) => {
+    await toast.promise(startServiceNow(serviceId), {
+      pending: "Starting service...",
+      success: "Service started successfully",
+      error: {
+        render({ data }) {
+          return getApiErrorMessage(data as Error) || "Failed to start service";
+        },
+      },
+    });
+  };
+
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
       {/* Top */}
@@ -47,13 +79,27 @@ const UpcomingServiceCard = ({
       <SlotsListClient slots={slots} />
 
       {/* Footer */}
-      <button className="mt-10 flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 py-5 text-xl font-semibold hover:bg-slate-50">
+      <button
+        onClick={() => {
+          setSelectedService({
+            id: serviceId,
+            serviceName,
+            serviceDescription: description,
+            date: scheduledDate,
+          });
+          setOpenEditModal(true);
+        }}
+        className="mt-10 flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 py-5 text-xl font-semibold hover:bg-slate-50"
+      >
         Edit
         <Edit className="h-5 w-5" />
       </button>
 
-      <button className="mt-10 flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 py-5 text-xl font-semibold hover:bg-slate-50">
-        Start Now
+      <button
+        onClick={() => handleStart(serviceId)}
+        className="mt-10 flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 py-5 text-xl font-semibold hover:bg-slate-50"
+      >
+        {isPending ? "Starting..." : "Start"}
         <ChevronRight className="h-5 w-5" />
       </button>
     </div>

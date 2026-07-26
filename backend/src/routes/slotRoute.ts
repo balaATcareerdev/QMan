@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createNewSlot,
   getActiveSlots,
+  getAllActiveSlotsQuick,
   getSlotStats,
   getUpcomingSlots,
 } from "../controllers/slotController.js";
@@ -28,6 +29,13 @@ slotRouter.get(
   userAuth,
   roleValidate("Client"),
   getUpcomingSlots,
+);
+
+slotRouter.get(
+  "/upcoming-peak",
+  userAuth,
+  roleValidate("Client"),
+  getAllActiveSlotsQuick,
 );
 
 export default slotRouter;

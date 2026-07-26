@@ -101,3 +101,31 @@ export const getUpcomingSlots = async (
     next(error);
   }
 };
+
+export const getAllActiveSlotsQuick = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const serviceId = req.query.serviceId as string;
+
+  const userId = req.userId;
+
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const result = await slotService.getPeekOfUpcomingSlots(userId);
+    return res.status(200).json({
+      success: true,
+      message: "Upcoming slots retrieved successfully",
+      slots: result.slots.map((slot) => ({
+        ...slot,
+        bookedCount: 0,
+      })),
+    });
+  } catch (error) {
+    next(error);
+  }
+};

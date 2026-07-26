@@ -1,14 +1,22 @@
-import { formatTime, getMeridiem } from "@/util/dateUtilts";
+import { formatDate, formatTime, getMeridiem } from "@/util/dateUtilts";
 import { CalendarDays, Pencil, Play } from "lucide-react";
 
 interface UpcomingSlotCardProps {
   startTime: string;
   bookedCount: number;
+  serviceName: string;
+  scheduledDate: string;
+  serviceDescription: string;
+  slotName: string;
 }
 
 const UpcomingSlotCard = ({
   startTime,
   bookedCount,
+  serviceName,
+  slotName,
+  scheduledDate,
+  serviceDescription,
 }: UpcomingSlotCardProps) => {
   return (
     <div className="flex items-center justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
@@ -30,18 +38,15 @@ const UpcomingSlotCard = ({
 
         <div>
           <h3 className="text-3xl font-bold text-slate-900">
-            <span className="text-blue-600">General Consultation</span> –
-            Afternoon Slot
+            <span className="text-blue-600">{serviceName}</span> – {slotName}
           </h3>
 
-          <p className="mt-2 text-xl text-slate-500">
-            Registration counter for general consultation
-          </p>
+          <p className="mt-2 text-xl text-slate-500">{serviceDescription}</p>
 
           <div className="mt-4 flex items-center gap-5 text-lg text-slate-500">
             <div className="flex items-center gap-2">
               <CalendarDays className="h-5 w-5" />
-              21 July 2026
+              {formatDate(new Date(scheduledDate), "dd MMM yyyy")}
             </div>
 
             <span>•</span>

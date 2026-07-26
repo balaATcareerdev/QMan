@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, asc, eq, gt, sql } from "drizzle-orm";
 import { db } from "../database/db.js";
 import { serviceSchema, slotSchema } from "../database/schema.js";
 import type { slotBody } from "../types/slotTypes.js";
@@ -162,6 +162,30 @@ class SlotService {
       ORDER BY ${slotSchema.startTime} ASC
     `);
     return { upcomingSlots: result };
+  }
+
+  async getPeekOfUpcomingSlots(userId: string) {
+    const slots = await db
+      .select({
+        id: slotSchema.id,
+        slotName: slotSchema.slotName,
+        startTime: slotSchema.startTime,
+        serviceName: serviceSchema.serviceName,
+        serviceDescription: serviceSchema.description,
+        scheduledDate: serviceSchema.date,
+      })
+      .from(slotSchema)
+      .innerJoin(serviceSchema, eq(slotSchema.serviceId, serviceSchema.id))
+      .where(
+        and(
+          eq(serviceSchema.createdBy, userId),
+          gt(slotSchema.startTime, new Date()),
+        ),
+      )
+      .orderBy(asc(slotSchema.startTime))
+      .limit(5);
+
+    return { slots };
   }
 }
 

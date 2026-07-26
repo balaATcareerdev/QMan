@@ -1,7 +1,8 @@
 import { createService } from "@/api/serviceApi";
+import { getApiErrorMessage } from "@/util/errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { LoaderCircle } from "lucide-react";
+import { CalendarDays, ClipboardList, FileText, Info, X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -59,9 +60,12 @@ const CreateServiceModal = ({
     onSuccess: () => {
       handleClose();
       toast.success("Service created successfully!");
-      queryClient.invalidateQueries({ queryKey: ["active_services"] });
-      queryClient.invalidateQueries({ queryKey: ["upcoming_services"] });
-      queryClient.invalidateQueries({ queryKey: ["service_stats"] });
+      queryClient.invalidateQueries({ queryKey: ["activeServices"] });
+      queryClient.invalidateQueries({ queryKey: ["upcomingServices"] });
+      queryClient.invalidateQueries({ queryKey: ["serviceStats"] });
+    },
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error));
     },
   });
 
@@ -80,77 +84,141 @@ const CreateServiceModal = ({
 
   if (!open) return null;
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
-      onClick={handleClose}
-    >
-      <div className="relative" onClick={(e) => e.stopPropagation()}>
-        {/* Close */}
-        <button
-          onClick={handleClose}
-          className="absolute -top-3 -right-3 bg-white rounded-full px-2 shadow text-black"
-        >
-          ✕
-        </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 backdrop-blur-sm">
+      <div className="w-full max-w-2xl rounded-3xl bg-white shadow-2xl">
+        {/* Header */}
+
+        <div className="flex items-start justify-between px-8 pt-8">
+          <div>
+            <h2 className="text-4xl font-bold text-slate-900">
+              Create New Service
+            </h2>
+
+            <p className="mt-2 text-lg text-slate-500">
+              Add a new service for today. You can add slots after creation.
+            </p>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="rounded-xl p-2 transition hover:bg-slate-100"
+          >
+            <X className="h-6 w-6 text-slate-500" />
+          </button>
+        </div>
+
+        {/* Body */}
 
         <form
           onSubmit={handleSubmit(submitForm)}
-          className="bg-linear-to-b from-[#1b1b1b] to-[#140B1B] text-gray-500 max-w-96 mx-4 md:p-6 p-4 text-sm rounded-lg shadow-lg"
+          className="space-y-7 px-8 py-8"
         >
-          <h2 className="text-2xl font-semibold mb-6 text-center text-white">
-            Create Service
-          </h2>
+          {/* Service Name */}
 
-          <input
-            className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white"
-            placeholder="Service Name"
-            {...register("serviceName")}
-          />
+          <div>
+            <label className="mb-3 block text-lg font-semibold text-slate-800">
+              Service Name
+              {errors.serviceName?.message && (
+                <span className="ml-1 text-red-500">*</span>
+              )}
+            </label>
 
-          {errors.serviceName && (
-            <div>
-              <p className="text-red-500 text-sm mt-1">
-                {errors.serviceName.message}
-              </p>
+            <div className="relative">
+              <ClipboardList className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+
+              <input
+                type="text"
+                {...register("serviceName")}
+                placeholder="Enter service name"
+                className="h-14 w-full rounded-xl border border-slate-300 pl-12 pr-4 text-lg outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              />
             </div>
-          )}
 
-          <input
-            className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white"
-            placeholder="Description"
-            {...register("serviceDescription")}
-          />
+            <p className="mt-2 text-sm text-slate-500">
+              Enter a name that represents this service
+            </p>
+          </div>
 
-          {errors.serviceDescription && (
-            <div>
-              <p className="text-red-500 text-sm mt-1">
-                {errors.serviceDescription.message}
-              </p>
+          {/* Description */}
+
+          <div>
+            <label className="mb-3 block text-lg font-semibold text-slate-800">
+              Service Description
+              {errors.serviceDescription && (
+                <span className="ml-1 text-red-500">*</span>
+              )}
+            </label>
+
+            <div className="relative">
+              <FileText className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
+
+              <textarea
+                {...register("serviceDescription")}
+                rows={4}
+                placeholder="Enter service description"
+                className="w-full resize-none rounded-xl border border-slate-300 py-4 pl-12 pr-4 text-lg outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              />
             </div>
-          )}
 
-          <input
-            className="w-full border mt-1 border-gray-500/30 rounded p-2 focus:outline-2 focus:outline-[#9711FB] text-white scheme-dark"
-            placeholder="Date"
-            type="date"
-            {...register("serviceDate")}
-          />
+            <p className="mt-2 text-sm text-slate-500">
+              Provide short details about this service
+            </p>
+          </div>
 
-          {errors.serviceDate && (
-            <div>
-              <p className="text-red-500 text-sm mt-1">
-                {errors.serviceDate.message}
-              </p>
+          {/* Date */}
+
+          <div>
+            <label className="mb-3 block text-lg font-semibold text-slate-800">
+              Service Date
+              {errors.serviceDate && (
+                <span className="ml-1 text-red-500">*</span>
+              )}
+            </label>
+
+            <div className="relative">
+              <CalendarDays className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+
+              <input
+                type="date"
+                {...register("serviceDate")}
+                className="h-14 w-full rounded-xl border border-slate-300 pl-12 pr-4 text-lg outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              />
             </div>
-          )}
 
-          <button
-            className="w-full my-3 bg-[#9711FB] hover:bg-[#9711FB]/80 transition py-2.5 rounded text-white flex justify-center items-center gap-1"
-            disabled={isPending}
-          >
-            Create
-            {isPending && <LoaderCircle size={20} className="animate-spin" />}
-          </button>
+            <p className="mt-2 text-sm text-slate-500">
+              Select the date for this service (today or a future date)
+            </p>
+          </div>
+
+          {/* Info Box */}
+
+          <div className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4">
+            <Info className="mt-0.5 h-5 w-5 text-blue-600" />
+
+            <p className="text-sm text-blue-700">
+              You can add multiple slots for this service after it is created.
+            </p>
+          </div>
+
+          {/* Footer */}
+
+          <div className="flex justify-end gap-4 pt-2">
+            <button
+              disabled={isPending}
+              type="button"
+              onClick={onClose}
+              className="rounded-xl border border-slate-300 px-8 py-3 font-medium text-slate-700 transition hover:bg-slate-100"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="rounded-xl bg-blue-600 px-8 py-3 font-medium text-white transition hover:bg-blue-700"
+            >
+              {isPending ? "Creating Service..." : "Create Service"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

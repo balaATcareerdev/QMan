@@ -4,7 +4,16 @@ import CreateServiceModal from "@/component/Modals/CreateServiceModal";
 import ActiveServiceSection from "@/component/HomeComponents/ActiveServiceSection";
 import PeekIntoUpcomingSlots from "@/component/HomeComponents/PeekIntoUpcomingSlots";
 import UpcomingServiceSection from "@/component/HomeComponents/UpcomingServiceSection";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ModalContext } from "@/context/ModalContext";
+import EditServiceModal from "@/component/Modals/EditServiceModal";
+
+export type SelectedServiceType = {
+  id: string;
+  serviceName: string;
+  serviceDescription: string;
+  date: string;
+};
 
 const Home = () => {
   // const stats = useMemo(() => {
@@ -66,18 +75,44 @@ const Home = () => {
   // }, [services, slots]);
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+
+  const [selectedService, setSelectedService] =
+    useState<SelectedServiceType | null>(null);
+
+  useEffect(() => {
+    console.log("Selected Service changed:", selectedService);
+  }, [selectedService]);
 
   return (
     <div className="min-h-screen p-2">
       <HeroSection setOpenCreateModal={setOpenCreateModal} />
       <Stats />
       <ActiveServiceSection />
-      <UpcomingServiceSection />
+
+      <ModalContext.Provider
+        value={{
+          openEditModal,
+          setOpenEditModal,
+          selectedService,
+          setSelectedService,
+        }}
+      >
+        <UpcomingServiceSection />
+      </ModalContext.Provider>
+
       <PeekIntoUpcomingSlots />
       <CreateServiceModal
         open={openCreateModal}
         onClose={() => setOpenCreateModal(false)}
       />
+      {selectedService && (
+        <EditServiceModal
+          open={openEditModal}
+          onClose={() => setOpenEditModal(false)}
+          service={selectedService}
+        />
+      )}
     </div>
   );
 };
