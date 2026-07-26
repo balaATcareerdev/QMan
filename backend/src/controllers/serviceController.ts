@@ -1,12 +1,4 @@
 import type { NextFunction, Request, Response } from "express";
-import {
-  createServiceSchema,
-  idSchema,
-  serviceIdSchema,
-} from "../validation/serviceValidation.js";
-import { db } from "../database/db.js";
-import { serviceSchema, userSchema } from "../database/schema.js";
-import { and, desc, eq, gte, lt } from "drizzle-orm";
 import { servicesService } from "../services/services.service.js";
 import { AppError } from "../errors/AppError.js";
 
@@ -51,7 +43,7 @@ export const getActiveServices = async (
     return res.status(200).json({
       success: true,
       message: "Active services found",
-      services: result.services,
+      services: result,
     });
   } catch (error) {
     next(error);
@@ -74,7 +66,7 @@ export const getUpcomingServices = async (
     return res.status(200).json({
       success: true,
       message: "Upcoming services found",
-      services: result.services,
+      services: result,
     });
   } catch (error) {
     next(error);

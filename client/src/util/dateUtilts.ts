@@ -72,6 +72,23 @@ export function getMeridiem(date: string | Date): "AM" | "PM" {
   return hours >= 12 ? "PM" : "AM";
 }
 
+export function getEndTimeStatus(startTime: Date, endTime: Date) {
+  const now = new Date();
+
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+
+  if (now < start) {
+    return "Upcoming";
+  }
+
+  if (now >= start && now <= end) {
+    return "Active";
+  }
+
+  return "OverTime";
+}
+
 /**
  * 
  * | Token  | Description              | Example  |

@@ -9,7 +9,6 @@ export type SlotDataType = {
   slotName: string;
   startTime: string;
   endTime: string;
-  status: SlotStatus;
 };
 
 interface ActiveServiceCardProps {
@@ -51,7 +50,13 @@ const ActiveServiceCard = ({
       <hr className="my-8" />
 
       {/* Slot Status */}
-      <SlotsListClient slots={slots} />
+      {slots.length > 0 ? (
+        <SlotsListClient slots={slots} />
+      ) : (
+        <div className="flex h-10 items-center justify-center rounded-3xl border border-slate-200 bg-red-100 text-lg font-semibold text-red-500 shadow-sm">
+          No slots available
+        </div>
+      )}
 
       {/* Footer */}
       <button className="mt-10 flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 py-5 text-xl font-semibold hover:bg-slate-50">

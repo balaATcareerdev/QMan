@@ -1,10 +1,35 @@
-import { peekIntoUpcomingSlots } from "@/assets/dummyData";
+import { getAllActiveSlotsQuick } from "@/api/slot.api";
 import UpcomingSlotCard from "@/component/HomeComponents/UpcomingSlotCard";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
-import { useState } from "react";
 
 const PeekIntoUpcomingSlots = () => {
-  const [slots, setSlots] = useState(peekIntoUpcomingSlots);
+  // const [slots, setSlots] = useState(peekIntoUpcomingSlots);
+
+  const { data: slots, isLoading } = useQuery({
+    queryKey: ["upcomingSlotsPeek"],
+    queryFn: getAllActiveSlotsQuick,
+  });
+
+  if (slots) {
+    console.log("Upcoming Slots:", slots);
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <p className="text-lg font-semibold">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!slots) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <p className="text-lg font-semibold">Unable to fetch upcoming slots</p>
+      </div>
+    );
+  }
 
   return (
     <section className="space-y-8 px-7">
@@ -26,15 +51,25 @@ const PeekIntoUpcomingSlots = () => {
 
       {/* Cards */}
 
-      <div className="space-y-5">
-        {slots.map((slot, index) => (
-          <UpcomingSlotCard
-            bookedCount={slot.bookedCount}
-            startTime={slot.startTime}
-            key={index}
-          />
-        ))}
-      </div>
+      {slots.length > 0 ? (
+        <div className="space-y-5">
+          {slots.map((slot) => (
+            <UpcomingSlotCard
+              bookedCount={slot.bookedCount}
+              startTime={slot.startTime}
+              key={slot.id}
+              serviceName={slot.serviceName}
+              slotName={slot.slotName}
+              scheduledDate={slot.scheduledDate}
+              serviceDescription={slot.serviceDescription}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex h-10 items-center justify-center rounded-3xl border border-slate-200 bg-orange-200 text-xl font-semibold text-slate-800 shadow-sm">
+          No upcoming slots found
+        </div>
+      )}
     </section>
   );
 };

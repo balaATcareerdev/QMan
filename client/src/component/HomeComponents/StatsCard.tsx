@@ -2,7 +2,7 @@ import { ChevronRight, type LucideIcon } from "lucide-react";
 
 interface StatsCardProps {
   title: string;
-  value: number;
+  value: string | number;
   description: string;
   icon: LucideIcon;
   iconBg: string;

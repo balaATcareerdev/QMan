@@ -59,31 +59,58 @@ class ServicesService {
     const endOfDay = new Date(startOfDay);
     endOfDay.setDate(endOfDay.getDate() + 1);
 
-    const services = await db
-      .select({
-        id: serviceSchema.id,
-        serviceName: serviceSchema.serviceName,
-        description: serviceSchema.description,
-        date: serviceSchema.date,
-        slotCount: sql<number>`count(${slotSchema.id})::int`,
-      })
-      .from(serviceSchema)
-      .leftJoin(slotSchema, eq(slotSchema.serviceId, serviceSchema.id))
-      .where(
+    // const services = await db
+    //   .select({
+    //     id: serviceSchema.id,
+    //     serviceName: serviceSchema.serviceName,
+    //     description: serviceSchema.description,
+    //     scheduledDate: serviceSchema.date,
+    //     slotCount: sql<number>`count(${slotSchema.id})::int`,
+    //   })
+    //   .from(serviceSchema)
+    //   .leftJoin(slotSchema, eq(slotSchema.serviceId, serviceSchema.id))
+    //   .where(
+    //     and(
+    //       eq(serviceSchema.createdBy, userId),
+    //       gte(serviceSchema.date, startOfDay),
+    //       lt(serviceSchema.date, endOfDay),
+    //     ),
+    //   )
+    //   .groupBy(serviceSchema.id)
+    //   .orderBy(desc(serviceSchema.createdAt))
+    //   .limit(5);
+
+    const services = await db.query.serviceSchema.findMany({
+      where: (service, { eq, and, gte, lt }) =>
         and(
-          eq(serviceSchema.createdBy, userId),
-          gte(serviceSchema.date, startOfDay),
-          lt(serviceSchema.date, endOfDay),
+          eq(service.createdBy, userId),
+          gte(service.date, startOfDay),
+          lt(service.date, endOfDay),
         ),
-      )
-      .groupBy(serviceSchema.id)
-      .orderBy(desc(serviceSchema.createdAt))
-      .limit(5);
+      with: {
+        slots: {
+          columns: {
+            slotName: true,
+            startTime: true,
+            endTime: true,
+          },
+          orderBy: (slot, { asc }) => [asc(slot.startTime)],
+          limit: 3,
+        },
+      },
+
+      limit: 5,
+    });
 
     if (!services) {
       throw new AppError("Error in fetching active services", 404);
     }
-    return { services };
+    return services.map((service) => ({
+      ...service,
+      slots: service.slots.map((slot) => ({
+        ...slot,
+      })),
+    }));
   }
 
   async getUpcomingServices(userId: string) {
@@ -93,28 +120,49 @@ class ServicesService {
     const tmr = new Date(today);
     tmr.setDate(tmr.getDate() + 1);
 
-    const services = await db
-      .select({
-        id: serviceSchema.id,
-        serviceName: serviceSchema.serviceName,
-        description: serviceSchema.description,
-        date: serviceSchema.date,
-        slotCount: sql<number>`count(${slotSchema.id})`,
-      })
-      .from(serviceSchema)
-      .leftJoin(slotSchema, eq(slotSchema.serviceId, serviceSchema.id))
-      .where(
-        and(eq(serviceSchema.createdBy, userId), gte(serviceSchema.date, tmr)),
-      )
-      .groupBy(serviceSchema.id)
-      .orderBy(desc(serviceSchema.createdAt))
-      .limit(5);
+    // const services = await db
+    //   .select({
+    //     id: serviceSchema.id,
+    //     serviceName: serviceSchema.serviceName,
+    //     description: serviceSchema.description,
+    //     date: serviceSchema.date,
+    //     slotCount: sql<number>`count(${slotSchema.id})`,
+    //   })
+    //   .from(serviceSchema)
+    //   .leftJoin(slotSchema, eq(slotSchema.serviceId, serviceSchema.id))
+    //   .where(
+    //     and(eq(serviceSchema.createdBy, userId), gte(serviceSchema.date, tmr)),
+    //   )
+    //   .groupBy(serviceSchema.id)
+    //   .orderBy(desc(serviceSchema.createdAt))
+    //   .limit(5);
+
+    const services = await db.query.serviceSchema.findMany({
+      where: (service, { eq, and, gte }) =>
+        and(eq(service.createdBy, userId), gte(service.date, tmr)),
+      with: {
+        slots: {
+          columns: {
+            slotName: true,
+            startTime: true,
+            endTime: true,
+          },
+          orderBy: (slot, { asc }) => [asc(slot.startTime)],
+          limit: 3,
+        },
+      },
+    });
 
     if (!services) {
       throw new AppError("Error in fetching upcoming services", 404);
     }
 
-    return { services };
+    return services.map((service) => ({
+      ...service,
+      slots: service.slots.map((slot) => ({
+        ...slot,
+      })),
+    }));
   }
 
   async getServiceStats(userId: string) {
@@ -142,7 +190,7 @@ class ServicesService {
           lt(serviceSchema.date, tmr),
         ),
       );
-    return { stats };
+    return { stats: { ...stats, customerWaiting: 0 } };
   }
 
   async activateService(serviceId: string, userId: string, maxService: number) {
