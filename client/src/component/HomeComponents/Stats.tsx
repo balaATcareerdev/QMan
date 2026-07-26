@@ -5,7 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Layers, Play, UserRound } from "lucide-react";
 
 const Stats = () => {
-  const { data: stats, isLoading } = useQuery({
+  const {
+    data: stats,
+    isLoading,
+    isError,
+  } = useQuery({
     queryFn: getServiceStats,
     queryKey: ["serviceStats"],
     refetchOnWindowFocus: false,
@@ -19,11 +23,21 @@ const Stats = () => {
     );
   }
 
+  if (isError || !stats) {
+    return (
+      <div className="px-7 py-10 lg:px-10">
+        <p className="text-lg font-semibold text-red-600">
+          Unable to load stats
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 px-7">
       <StatsCard
         title="Today's Services"
-        value={formatNumber(stats.activeServices) || 0}
+        value={formatNumber(stats.activeServices ?? 0)}
         description="Total services scheduled"
         icon={Layers}
         iconBg="bg-blue-100"
@@ -31,7 +45,7 @@ const Stats = () => {
       />
       <StatsCard
         title="Running slots"
-        value={formatNumber(stats.activeSlots) || 0}
+        value={formatNumber(stats.activeSlots ?? 0)}
         description="Currently runnning"
         icon={Play}
         iconBg="bg-green-100"
@@ -39,7 +53,7 @@ const Stats = () => {
       />
       <StatsCard
         title="Customer waiting"
-        value={formatNumber(stats.customerWaiting) || 0}
+        value={formatNumber(stats.customerWaiting ?? 0)}
         description="Across all queues"
         icon={UserRound}
         iconBg="bg-orange-100"

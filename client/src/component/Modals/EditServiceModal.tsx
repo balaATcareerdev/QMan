@@ -24,7 +24,12 @@ const EditServiceModal = ({
   onClose: () => void;
   service: SelectedServiceType;
 }) => {
-  const toDateInputValue = (value: string) => value.slice(0, 10);
+  const toDateInputValue = (value: string) => {
+    const d = new Date(value);
+    const month = `${d.getMonth() + 1}`.padStart(2, "0");
+    const day = `${d.getDate()}`.padStart(2, "0");
+    return `${d.getFullYear()}-${month}-${day}`;
+  };
   const {
     register,
     handleSubmit,
@@ -54,7 +59,12 @@ const EditServiceModal = ({
 
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 backdrop-blur-sm">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="edit-service-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 backdrop-blur-sm"
+    >
       <div className="w-full max-w-2xl rounded-3xl bg-white shadow-2xl">
         {/* Header */}
 
@@ -179,6 +189,7 @@ const EditServiceModal = ({
 
             <button
               type="submit"
+              disabled={isSubmitting}
               className="rounded-xl bg-blue-600 px-7 py-3 font-medium text-white transition hover:bg-blue-700"
             >
               {isSubmitting ? "Updating Service..." : "Update Service"}

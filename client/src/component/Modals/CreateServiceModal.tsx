@@ -118,7 +118,7 @@ const CreateServiceModal = ({
           <div>
             <label className="mb-3 block text-lg font-semibold text-slate-800">
               Service Name
-              {errors.serviceName && (
+              {errors.serviceName?.message && (
                 <span className="ml-1 text-red-500">*</span>
               )}
             </label>
@@ -204,6 +204,7 @@ const CreateServiceModal = ({
 
           <div className="flex justify-end gap-4 pt-2">
             <button
+              disabled={isPending}
               type="button"
               onClick={onClose}
               className="rounded-xl border border-slate-300 px-8 py-3 font-medium text-slate-700 transition hover:bg-slate-100"

@@ -7,7 +7,11 @@ import { ChevronRight } from "lucide-react";
 const ActiveServiceSection = () => {
   // const [services, setServices] = useState(dummyActiveServices);
 
-  const { data: services, isLoading } = useQuery({
+  const {
+    data: services,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["activeServices"],
     queryFn: getActiveServices,
   });
@@ -20,10 +24,12 @@ const ActiveServiceSection = () => {
     );
   }
 
-  if (!services) {
+  if (isError || !services) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center">
-        <p className="text-lg font-semibold">No services found</p>
+      <div className="px-7 py-10 lg:px-10">
+        <p className="text-lg font-semibold text-red-600">
+          Unable to load today's services
+        </p>
       </div>
     );
   }

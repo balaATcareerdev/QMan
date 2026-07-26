@@ -59,27 +59,6 @@ class ServicesService {
     const endOfDay = new Date(startOfDay);
     endOfDay.setDate(endOfDay.getDate() + 1);
 
-    // const services = await db
-    //   .select({
-    //     id: serviceSchema.id,
-    //     serviceName: serviceSchema.serviceName,
-    //     description: serviceSchema.description,
-    //     scheduledDate: serviceSchema.date,
-    //     slotCount: sql<number>`count(${slotSchema.id})::int`,
-    //   })
-    //   .from(serviceSchema)
-    //   .leftJoin(slotSchema, eq(slotSchema.serviceId, serviceSchema.id))
-    //   .where(
-    //     and(
-    //       eq(serviceSchema.createdBy, userId),
-    //       gte(serviceSchema.date, startOfDay),
-    //       lt(serviceSchema.date, endOfDay),
-    //     ),
-    //   )
-    //   .groupBy(serviceSchema.id)
-    //   .orderBy(desc(serviceSchema.createdAt))
-    //   .limit(5);
-
     const services = await db.query.serviceSchema.findMany({
       where: (service, { eq, and, gte, lt }) =>
         and(
@@ -87,6 +66,7 @@ class ServicesService {
           gte(service.date, startOfDay),
           lt(service.date, endOfDay),
         ),
+      orderBy: (service, { desc }) => [desc(service.createdAt)],
       with: {
         slots: {
           columns: {
